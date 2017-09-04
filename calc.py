@@ -27,7 +27,7 @@ class Token(object):
         return '< Token {type_}: {value} >'.format(type_=self.type, value=self.value)
 
 
-class Interpreter(object):
+class Lexer(object):
     def __init__(self, text):
         self.text = text
         self.pos = 0
@@ -36,7 +36,7 @@ class Interpreter(object):
 
     @staticmethod
     def error():
-        raise Exception('Error parsing input')
+        raise Exception('Invalid character')
 
     def advance(self):
         self.pos += 1
@@ -87,22 +87,40 @@ class Interpreter(object):
 
         return Token(EOF, None)
 
+class Interpreter(object):
+
+    def __init__(self, lexer):
+        self.lexer = lexer
+        self.current_token = self.lexer.get_next_token()
+
+    @staticmethod
+    def error():
+        raise Exception('Invalid syntax')
+
+
     def eat(self, token_type):
         if self.current_token.type == token_type:
-            self.current_token = self.get_next_token()
+            self.current_token = self.lexer.get_next_token()
         else:
             self.error()
 
-    def term(self):
+    def factor(self):
+        """
+        factor: INTEGER
+
+        """
         token = self.current_token
         self.eat(INTEGER)
         return token.value
 
     def expr(self):
+        """
+        expr: factor ((MUL|DIV)factor)*
 
-        self.current_token = self.get_next_token()
+        """
 
-        result = self.term()
+
+        result = self.factor()
 
         while self.current_token.type in ops:
 
@@ -110,7 +128,7 @@ class Interpreter(object):
 
             self.eat(op.type)
 
-            right = self.term()
+            right = self.factor()
 
             result = ops[op.type](result, right)
 
@@ -120,13 +138,13 @@ class Interpreter(object):
 if __name__ == '__main__':
     while True:
         try:
-            input_text = raw_input('calc> ')
+            text = raw_input('calc> ')
         except EOFError:
             break
 
-        if not input_text:
+        if not text:
             continue
-
-        interpreter = Interpreter(input_text)
+        lexer = Lexer(text)
+        interpreter = Interpreter(lexer)
         result = interpreter.expr()
         print result
