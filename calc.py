@@ -1,3 +1,5 @@
+import operator
+
 # token types
 
 INTEGER = 'INTEGER'
@@ -6,6 +8,13 @@ MINUS = 'MINUS'
 MULTIPLY = 'MULTIPLY'
 DIVIDE = 'DIVIDE'
 EOF = 'EOF'
+
+ops = {
+    PLUS: operator.add,
+    MINUS: operator.sub,
+    MULTIPLY: operator.mul,
+    DIVIDE: operator.div
+}
 
 
 class Token(object):
@@ -84,42 +93,28 @@ class Interpreter(object):
         else:
             self.error()
 
+    def term(self):
+        token = self.current_token
+        self.eat(INTEGER)
+        return token.value
+
     def expr(self):
 
         self.current_token = self.get_next_token()
-        left = self.current_token
-        self.eat(INTEGER)
 
-        while self.current_token.type != EOF:
+        result = self.term()
+
+        while self.current_token.type in ops:
 
             op = self.current_token
 
-            if op.type == PLUS:
-                self.eat(PLUS)
-            elif op.type == MINUS:
-                self.eat(MINUS)
-            elif op.type == MULTIPLY:
-                self.eat(MULTIPLY)
-            elif op.type == DIVIDE:
-                self.eat(DIVIDE)
-            else:
-                self.error()
+            self.eat(op.type)
 
-            right = self.current_token
-            self.eat(INTEGER)
+            right = self.term()
 
-            if op.type == PLUS:
-                res = left.value + right.value
-            elif op.type == MINUS:
-                res = left.value - right.value
-            elif op.type == MULTIPLY:
-                res = left.value * right.value
-            else:
-                res = left.value / right.value
+            result = ops[op.type](result, right)
 
-            left = Token(INTEGER, res)
-
-        return left.value
+        return result
 
 
 if __name__ == '__main__':
