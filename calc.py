@@ -9,11 +9,18 @@ MULTIPLY = 'MULTIPLY'
 DIVIDE = 'DIVIDE'
 EOF = 'EOF'
 
-ops = {
+OPS = {
     PLUS: operator.add,
     MINUS: operator.sub,
     MULTIPLY: operator.mul,
     DIVIDE: operator.div
+}
+
+SYMBOLS = {
+    '+': PLUS,
+    '-': MINUS,
+    '*': MULTIPLY,
+    '/': DIVIDE
 }
 
 
@@ -67,21 +74,10 @@ class Lexer(object):
             if self.current_char.isdigit():
                 return Token(INTEGER, self.integer())
 
-            if self.current_char == '+':
+            if self.current_char in SYMBOLS:
+                current_char = self.current_char
                 self.advance()
-                return Token(PLUS, '+')
-
-            if self.current_char == '-':
-                self.advance()
-                return Token(MINUS, '-')
-
-            if self.current_char == '*':
-                self.advance()
-                return Token(MULTIPLY, '*')
-
-            if self.current_char == '/':
-                self.advance()
-                return Token(DIVIDE, '/')
+                return Token(SYMBOLS[current_char], current_char)
 
             self.error()
 
@@ -120,14 +116,14 @@ class Interpreter(object):
 
         result = self.factor()
 
-        while self.current_token.type in ops:
+        while self.current_token.type in OPS:
             op = self.current_token
 
             self.eat(op.type)
 
             right = self.factor()
 
-            result = ops[op.type](result, right)
+            result = OPS[op.type](result, right)
 
         return result
 
