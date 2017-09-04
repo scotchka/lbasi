@@ -87,8 +87,8 @@ class Lexer(object):
 
         return Token(EOF, None)
 
-class Interpreter(object):
 
+class Interpreter(object):
     def __init__(self, lexer):
         self.lexer = lexer
         self.current_token = self.lexer.get_next_token()
@@ -96,7 +96,6 @@ class Interpreter(object):
     @staticmethod
     def error():
         raise Exception('Invalid syntax')
-
 
     def eat(self, token_type):
         if self.current_token.type == token_type:
@@ -119,11 +118,9 @@ class Interpreter(object):
 
         """
 
-
         result = self.factor()
 
         while self.current_token.type in ops:
-
             op = self.current_token
 
             self.eat(op.type)
