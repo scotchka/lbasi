@@ -108,20 +108,33 @@ class Interpreter(object):
         self.eat(INTEGER)
         return token.value
 
+    def term(self):
+
+        result = self.factor()
+
+        while self.current_token.type in (MULTIPLY, DIVIDE):
+            op = self.current_token
+            self.eat(op.type)
+            right = self.factor()
+            result = OPS[op.type](result, right)
+
+        return result
+
+
     def expr(self):
         """
         expr: factor ((MUL|DIV)factor)*
 
         """
 
-        result = self.factor()
+        result = self.term()
 
-        while self.current_token.type in OPS:
+        while self.current_token.type in (PLUS, MINUS):
             op = self.current_token
 
             self.eat(op.type)
 
-            right = self.factor()
+            right = self.term()
 
             result = OPS[op.type](result, right)
 
