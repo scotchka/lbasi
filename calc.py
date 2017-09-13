@@ -8,6 +8,9 @@ MINUS = 'MINUS'
 MULTIPLY = 'MULTIPLY'
 DIVIDE = 'DIVIDE'
 EOF = 'EOF'
+LPARENS = 'LPARENS'
+RPARENS = 'RPARENS'
+
 
 OPS = {
     PLUS: operator.add,
@@ -20,7 +23,9 @@ SYMBOLS = {
     '+': PLUS,
     '-': MINUS,
     '*': MULTIPLY,
-    '/': DIVIDE
+    '/': DIVIDE,
+    '(': LPARENS,
+    ')': RPARENS
 }
 
 
@@ -105,8 +110,16 @@ class Interpreter(object):
 
         """
         token = self.current_token
-        self.eat(INTEGER)
-        return token.value
+        if token.type == INTEGER:
+            self.eat(INTEGER)
+            return token.value
+        elif token.type == LPARENS:
+            self.eat(LPARENS)
+            result = self.expr()
+            self.eat(RPARENS)
+            return result
+        else:
+            self.error()
 
     def term(self):
 
@@ -123,7 +136,7 @@ class Interpreter(object):
 
     def expr(self):
         """
-        expr: factor ((MUL|DIV)factor)*
+        expr: TERM ((PLUS|MINUS)TERM)*
 
         """
 
