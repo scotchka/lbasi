@@ -164,6 +164,12 @@ if __name__ == '__main__':
         if not text:
             continue
         lexer = Lexer(text)
-        interpreter = Interpreter(lexer)
+
+        try:
+            interpreter = Interpreter(lexer)
+        except Exception as e:
+            print 'Invalid expression'
+            continue
+
         result = interpreter.expr()
         print result
