@@ -1,22 +1,23 @@
-block: "{" (stmt ";") * "}"
+?block: "{" (stmt ";") * "}"
 
-stmt: "let" WORD expr -> assign
-    | "fn" WORD "(" WORD * ")" block -> function
+?stmt: "global" WORD expr -> assign_global
+    | "local" WORD expr -> assign_local
+    | "fn" WORD "(" WORD * ")" block -> declare_function
     | "return" expr -> return
     | "if" expr block ("elif" expr block)* ("else" block)? -> conditional
-    | "while" expr block
+    | "while" expr block -> while
     | "print" expr -> print
     | expr
     
 
-expr: expr ("<" | ">" | "==" | "<=" | ">=") expr -> compare
+?expr: expr ("<" | ">" | "==" | "<=" | ">=") expr -> compare
     | term ("+"|"-") expr -> add_sub
     | term
     
-term: factor ("*"|"/") term -> mul_div
+?term: factor ("*"|"/") term -> mul_div
     | factor
 
-factor: NUMBER
+?factor: NUMBER
     | WORD
     | ESCAPED_STRING
     | WORD "(" expr* ")" -> call
@@ -25,8 +26,11 @@ factor: NUMBER
     | "None"
     | "(" expr ")"
 
+COMMENT: /\(#[\s\S]*#\)/
+
 %import common.NUMBER
 %import common.ESCAPED_STRING
 %import common.WORD
 %import common.WS
 %ignore WS
+%ignore COMMENT
