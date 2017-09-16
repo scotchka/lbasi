@@ -4,6 +4,7 @@ stmt: "let" WORD expr -> assign
     | "fn" WORD "(" WORD * ")" block -> function
     | "return" expr -> return
     | "if" expr block ("elif" expr block)* ("else" block)? -> conditional
+    | "while" expr block
     | "print" expr -> print
     | expr
     
@@ -19,6 +20,9 @@ factor: NUMBER
     | WORD
     | ESCAPED_STRING
     | WORD "(" expr* ")" -> call
+    | "True"
+    | "False"
+    | "None"
     | "(" expr ")"
 
 %import common.NUMBER
