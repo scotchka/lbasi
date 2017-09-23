@@ -10,11 +10,22 @@
     | expr
     
 
-?expr: expr ("<" | ">" | "==" | "<=" | ">=") expr -> compare
-    | term ("+"|"-") expr -> add_sub
+
+
+
+?expr: term "==" expr -> eq
+    | term "<" expr -> lt
+    | term ">" expr -> gt
+    | term "<=" expr -> le
+    | term ">=" expr -> ge
+    | term "!=" expr -> ne
+    | "!" expr -> neg
+    | term "+" expr -> add
+    | term "-" expr -> sub
     | term
     
-?term: factor ("*"|"/") term -> mul_div
+?term: factor "*" term -> mul
+    | factor "/" term -> sub
     | factor
 
 ?factor: NUMBER
