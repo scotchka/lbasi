@@ -11,7 +11,6 @@ EOF = 'EOF'
 LPARENS = 'LPARENS'
 RPARENS = 'RPARENS'
 
-
 OPS = {
     PLUS: operator.add,
     MINUS: operator.sub,
@@ -29,30 +28,25 @@ SYMBOLS = {
 }
 
 
-class AST(object):
+class CompilerError(Exception):
     pass
 
 
-class BinOp(AST):
-    def __init__(self, left, op, right):
-        self.left = left
-        self.token = self.op = op
-        self.right = right
-
-    def __repr__(self):
-
-        return 'BinOp({left}, {token}, {right})'.format(left=repr(self.left),
-                                                        token=repr(self.token.value),
-                                                        right=repr(self.right))
+class ParserError(CompilerError):
+    pass
 
 
-class Num(AST):
-    def __init__(self, token):
-        self.token = token
-        self.value = token.value
+class LexerError(CompilerError):
+    pass
 
-    def __repr__(self):
-        return 'Num({})'.format(self.value)
+
+class InterpreterError(CompilerError):
+    pass
+
+
+#
+# Lexer
+#
 
 
 class Token(object):
@@ -74,7 +68,7 @@ class Lexer(object):
 
     @staticmethod
     def error():
-        raise Exception('Invalid character')
+        raise LexerError('Invalid character')
 
     def advance(self):
         self.pos += 1
@@ -115,6 +109,35 @@ class Lexer(object):
         return Token(EOF, None)
 
 
+#
+# Parser
+#
+
+class AST(object):
+    pass
+
+
+class BinOp(AST):
+    def __init__(self, left, op, right):
+        self.left = left
+        self.token = self.op = op
+        self.right = right
+
+    def __repr__(self):
+        return 'BinOp({left}, {token}, {right})'.format(left=repr(self.left),
+                                                        token=repr(self.token.value),
+                                                        right=repr(self.right))
+
+
+class Num(AST):
+    def __init__(self, token):
+        self.token = token
+        self.value = token.value
+
+    def __repr__(self):
+        return 'Num({})'.format(self.value)
+
+
 class Parser(object):
     def __init__(self, lexer):
         self.lexer = lexer
@@ -122,7 +145,7 @@ class Parser(object):
 
     @staticmethod
     def error():
-        raise Exception('Invalid syntax')
+        raise ParserError('Invalid syntax')
 
     def eat(self, token_type):
         if self.current_token.type == token_type:
@@ -179,6 +202,38 @@ class Parser(object):
         return self.expr()
 
 
+#
+# Interpreter
+#
+
+class NodeVisitor(object):
+    def visit(self, node):
+        method_name = 'visit_' + type(node).__name__
+        visitor = getattr(self, method_name, self.generic_visit)
+        return visitor(node)
+
+    def generic_visit(self, node):
+        raise InterpreterError('No visit_{} method'.format(type(node).__name__))
+
+
+class Interpreter(NodeVisitor):
+    def __init__(self, parser):
+        self.parser = parser
+
+    def visit_BinOp(self, node):
+        if node.op.type in (PLUS, MINUS, MULTIPLY, DIVIDE):
+            return OPS[node.op.type](self.visit(node.left), self.visit(node.right))
+        else:
+            raise InterpreterError('unknown operation')
+
+    def visit_Num(self, node):
+        return node.value
+
+    def interpret(self):
+        ast = self.parser.parse()
+        return self.visit(ast)
+
+
 if __name__ == '__main__':
     while True:
         try:
@@ -189,12 +244,13 @@ if __name__ == '__main__':
         if not text:
             continue
         lexer = Lexer(text)
+        parser = Parser(lexer)
+        interpreter = Interpreter(parser)
 
         try:
-            parser = Parser(lexer)
-        except Exception as e:
+            result = interpreter.interpret()
+        except CompilerError as e:
             print 'Invalid expression'
             continue
-
-        result = parser.expr()
-        print result
+        else:
+            print result
