@@ -10,6 +10,13 @@ DIVIDE = 'DIVIDE'
 EOF = 'EOF'
 LPARENS = 'LPARENS'
 RPARENS = 'RPARENS'
+BEGIN = 'BEGIN'
+END = 'END'
+SEMI = 'SEMI'
+DOT = 'DOT'
+ID = 'ID'
+ASSIGN = 'ASSIGN'
+
 
 OPS = {
     PLUS: operator.add,
@@ -25,4 +32,9 @@ SYMBOLS = {
     '/': DIVIDE,
     '(': LPARENS,
     ')': RPARENS
+}
+
+RESERVED_KEYWORDS = {
+    'BEGIN',
+    'END'
 }

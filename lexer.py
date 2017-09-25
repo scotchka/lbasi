@@ -1,5 +1,5 @@
 from errors import LexerError
-from constants import SYMBOLS, INTEGER, EOF
+from constants import SYMBOLS, INTEGER, EOF, RESERVED_KEYWORDS, ID, ASSIGN, SEMI, DOT
 
 
 class Token(object):
@@ -41,6 +41,17 @@ class Lexer(object):
             self.advance()
         return int(''.join(digits))
 
+    def _id(self):
+        result = ''
+        while self.current_char is not None and self.current_char.isalnum():
+            result += self.current_char
+            self.advance()
+
+        if result in RESERVED_KEYWORDS:
+            return Token(result, result)
+
+        return Token(ID, result)
+
     def get_next_token(self):
 
         while self.current_char is not None:
@@ -56,6 +67,22 @@ class Lexer(object):
                 current_char = self.current_char
                 self.advance()
                 return Token(SYMBOLS[current_char], current_char)
+
+            if self.current_char.isalpha():
+                return self._id()
+
+            if self.current_char == ':' and self.peek() == '=':
+                self.advance()
+                self.advance()
+                return Token(ASSIGN, ':=')
+
+            if self.current_char == ';':
+                self.advance()
+                return Token(SEMI, ';')
+
+            if self.current_char == '.':
+                self.advance()
+                return Token(DOT, '.')
 
             self.error()
 
