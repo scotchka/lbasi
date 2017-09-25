@@ -1,4 +1,4 @@
-from exceptions import InterpreterError
+from errors import InterpreterError
 from constants import OPS, PLUS, MINUS, MULTIPLY, DIVIDE
 
 

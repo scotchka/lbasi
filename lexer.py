@@ -1,4 +1,4 @@
-from exceptions import LexerError
+from errors import LexerError
 from constants import SYMBOLS, INTEGER, EOF
 
 

@@ -1,4 +1,4 @@
-from exceptions import ParserError
+from errors import ParserError
 from constants import INTEGER, PLUS, MINUS, MULTIPLY, DIVIDE, LPARENS, RPARENS
 
 

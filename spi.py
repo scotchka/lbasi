@@ -1,7 +1,7 @@
 from lexer import Lexer
 from parser import Parser
 from interpreter import Interpreter
-from exceptions import CompilerError
+from errors import CompilerError
 
 if __name__ == '__main__':
     while True:
