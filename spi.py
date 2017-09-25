@@ -129,6 +129,12 @@ class BinOp(AST):
                                                         right=repr(self.right))
 
 
+class UnaryOp(AST):
+    def __init__(self, op, expr):
+        self.token = self.op = op
+        self.expr = expr
+
+
 class Num(AST):
     def __init__(self, token):
         self.token = token
@@ -167,6 +173,9 @@ class Parser(object):
             node = self.expr()
             self.eat(RPARENS)
             return node
+        elif token.type in (PLUS, MINUS):
+            self.eat(token.type)
+            return UnaryOp(token, self.factor())
         else:
             self.error()
 
@@ -224,10 +233,18 @@ class Interpreter(NodeVisitor):
         if node.op.type in (PLUS, MINUS, MULTIPLY, DIVIDE):
             return OPS[node.op.type](self.visit(node.left), self.visit(node.right))
         else:
-            raise InterpreterError('unknown operation')
+            raise InterpreterError('unknown binary operation')
 
     def visit_Num(self, node):
         return node.value
+
+    def visit_UnaryOp(self, node):
+        if node.op.type == MINUS:
+            return -self.visit(node.expr)
+        elif node.op.type == PLUS:
+            return +self.visit(node.expr)
+        else:
+            raise InterpreterError('unknown unary operation')
 
     def interpret(self):
         ast = self.parser.parse()
