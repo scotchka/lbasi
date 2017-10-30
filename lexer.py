@@ -43,7 +43,7 @@ class Lexer(object):
 
     def _id(self):
         result = ''
-        while self.current_char is not None and self.current_char.isalnum():
+        while self.current_char is not None and (self.current_char.isalnum() or self.current_char == '_'):
             result += self.current_char
             self.advance()
 
@@ -75,7 +75,7 @@ class Lexer(object):
                 self.advance()
                 return Token(SYMBOLS[current_char], current_char)
 
-            if self.current_char.isalpha():
+            if self.current_char.isalpha() or self.current_char == '_':
                 return self._id()
 
             if self.current_char == ':' and self.peek() == '=':

@@ -27,9 +27,9 @@ def test_case_insensitive():
         BEGIN
 
             BEgIN
-                number := 2;
-                a := NumBer;
-                B := 10 * a + 10 * NUMBER div 4;
+                _num_ber := 2;
+                a := _Num_Ber;
+                B := 10 * a + 10 * _NUM_BER div 4;
                 c := a - - b
             enD;
 
@@ -42,4 +42,4 @@ def test_case_insensitive():
     interpreter = Interpreter(parser)
     interpreter.interpret()
 
-    assert interpreter.GLOBAL_SCOPE == {'A': 2, 'X': 11, 'C': 27, 'B': 25, 'NUMBER': 2}
+    assert interpreter.GLOBAL_SCOPE == {'A': 2, 'X': 11, 'C': 27, 'B': 25, '_NUM_BER': 2}
