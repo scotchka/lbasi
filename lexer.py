@@ -47,6 +47,8 @@ class Lexer(object):
             result += self.current_char
             self.advance()
 
+        result = result.upper()
+
         if result in RESERVED_KEYWORDS:
             return Token(result, result)
 

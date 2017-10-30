@@ -19,4 +19,27 @@ def test_interpreter():
     interpreter = Interpreter(parser)
     interpreter.interpret()
 
-    assert interpreter.GLOBAL_SCOPE == {'a': 2, 'x': 11, 'c': 27, 'b': 25, 'number': 2}
+    assert interpreter.GLOBAL_SCOPE == {'A': 2, 'X': 11, 'C': 27, 'B': 25, 'NUMBER': 2}
+
+
+def test_case_insensitive():
+    text = """
+        BEGIN
+
+            BEgIN
+                number := 2;
+                a := NumBer;
+                B := 10 * a + 10 * NUMBER / 4;
+                c := a - - b
+            enD;
+
+        x := 11;
+        END.
+    """
+
+    lexer = Lexer(text)
+    parser = Parser(lexer)
+    interpreter = Interpreter(parser)
+    interpreter.interpret()
+
+    assert interpreter.GLOBAL_SCOPE == {'A': 2, 'X': 11, 'C': 27, 'B': 25, 'NUMBER': 2}
