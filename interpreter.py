@@ -15,6 +15,7 @@ class NodeVisitor(object):
 class Interpreter(NodeVisitor):
     def __init__(self, parser):
         self.parser = parser
+        self.GLOBAL_SCOPE = {}
 
     def visit_BinOp(self, node):
         if node.op.type in (PLUS, MINUS, MULTIPLY, DIVIDE):
@@ -32,6 +33,22 @@ class Interpreter(NodeVisitor):
             return +self.visit(node.expr)
         else:
             raise InterpreterError('unknown unary operation')
+
+    def visit_Compound(self, node):
+        for child in node.children:
+            self.visit(child)
+
+    def visit_NoOp(self, node):
+        pass
+
+    def visit_Assign(self, node):
+        name = node.left.value
+        self.GLOBAL_SCOPE[name] = self.visit(node.right)
+
+    def visit_Var(self, node):
+        name = node.value
+        value = self.GLOBAL_SCOPE[name]
+        return value
 
     def interpret(self):
         ast = self.parser.parse()

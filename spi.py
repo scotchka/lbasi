@@ -4,22 +4,12 @@ from interpreter import Interpreter
 from errors import CompilerError
 
 if __name__ == '__main__':
-    while True:
-        try:
-            text = raw_input('calc> ')
-        except EOFError:
-            break
+    import sys
+    with open(sys.argv[1]) as f:
+        text = f.read()
 
-        if not text:
-            continue
-        lexer = Lexer(text)
-        parser = Parser(lexer)
-        interpreter = Interpreter(parser)
-
-        try:
-            result = interpreter.interpret()
-        except CompilerError as e:
-            print 'Invalid expression'
-            continue
-        else:
-            print result
+    lexer = Lexer(text)
+    parser = Parser(lexer)
+    interpreter = Interpreter(parser)
+    result = interpreter.interpret()
+    print interpreter.GLOBAL_SCOPE
