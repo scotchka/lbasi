@@ -36,5 +36,6 @@ SYMBOLS = {
 
 RESERVED_KEYWORDS = {
     'BEGIN',
-    'END'
+    'END',
+    'DIV'
 }

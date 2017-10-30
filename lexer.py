@@ -1,5 +1,5 @@
 from errors import LexerError
-from constants import SYMBOLS, INTEGER, EOF, RESERVED_KEYWORDS, ID, ASSIGN, SEMI, DOT
+from constants import SYMBOLS, INTEGER, EOF, RESERVED_KEYWORDS, ID, ASSIGN, SEMI, DOT, DIVIDE
 
 
 class Token(object):
@@ -50,7 +50,12 @@ class Lexer(object):
         result = result.upper()
 
         if result in RESERVED_KEYWORDS:
-            return Token(result, result)
+            if result in {'BEGIN', 'END'}:
+                return Token(result, result)
+            elif result == 'DIV':
+                return Token(DIVIDE, result)
+            else:
+                self.error()
 
         return Token(ID, result)
 

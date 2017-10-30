@@ -7,7 +7,7 @@ def test_interpreter():
             BEGIN
                 number := 2;
                 a := number;
-                b := 10 * a + 10 * number / 4;
+                b := 10 * a + 10 * number DIV 4;
                 c := a - - b
             END;
             x := 11;
@@ -29,11 +29,11 @@ def test_case_insensitive():
             BEgIN
                 number := 2;
                 a := NumBer;
-                B := 10 * a + 10 * NUMBER / 4;
+                B := 10 * a + 10 * NUMBER div 4;
                 c := a - - b
             enD;
 
-        x := 11;
+        x := 11
         END.
     """
 
