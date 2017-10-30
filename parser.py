@@ -1,6 +1,6 @@
 from errors import ParserError
 from constants import (INTEGER, PLUS, MINUS, MULTIPLY, DIVIDE, LPARENS, RPARENS, DOT,
-                       BEGIN, END, SEMI, ID, ASSIGN)
+                       BEGIN, END, SEMI, ID, ASSIGN, EOF)
 
 
 class AST(object):
@@ -51,7 +51,7 @@ class Var(AST):
         self.value = token.value
 
 
-class NoOP(AST):
+class NoOp(AST):
     pass
 
 
@@ -72,7 +72,11 @@ class Parser(object):
 
     def factor(self):
         """
-        factor: INTEGER
+        factor: PLUS factor
+              | MINUS factor
+              | INTEGER
+              | LPARENS expr RPARENS
+              | variable
 
         """
         token = self.current_token
@@ -88,7 +92,7 @@ class Parser(object):
             self.eat(token.type)
             return UnaryOp(token, self.factor())
         else:
-            self.error()
+            return self.variable()
 
     def term(self):
 
@@ -169,7 +173,11 @@ class Parser(object):
         return node
 
     def empty(self):
-        return NoOP()
+        return NoOp()
 
     def parse(self):
-        return self.expr()
+        node = self.program()
+        if self.current_token.type != EOF:
+            self.error()
+
+        return node
