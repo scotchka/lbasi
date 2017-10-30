@@ -1,5 +1,6 @@
 from errors import ParserError
-from constants import INTEGER, PLUS, MINUS, MULTIPLY, DIVIDE, LPARENS, RPARENS
+from constants import (INTEGER, PLUS, MINUS, MULTIPLY, DIVIDE, LPARENS, RPARENS, DOT,
+                       BEGIN, END, SEMI, ID, ASSIGN)
 
 
 class AST(object):
@@ -116,6 +117,59 @@ class Parser(object):
             node = BinOp(left=node, op=token, right=self.term())
 
         return node
+
+    def program(self):
+        node = self.compound_statement()
+        self.eat(DOT)
+        return node
+
+    def compound_statement(self):
+        self.eat(BEGIN)
+        nodes = self.statement_list()
+        self.eat(END)
+
+        root = Compound()
+        root.children.extend(nodes)
+
+        return root
+
+    def statement_list(self):
+        nodes = [self.statement()]
+
+        while self.current_token.type == SEMI:
+            self.eat(SEMI)
+            nodes.append(self.statement())
+
+        if self.current_token.type == ID:
+            self.error()
+
+        return nodes
+
+    def statement(self):
+        if self.current_token.type == BEGIN:
+            node = self.compound_statement()
+        elif self.current_token.type == ID:
+            node = self.assignment_statement()
+        else:
+            node = self.empty()
+
+        return node
+
+    def assignment_statement(self):
+        left = self.variable()
+        token = self.current_token
+        self.eat(ASSIGN)
+        right = self.expr()
+        node = Assign(left, token, right)
+        return node
+
+    def variable(self):
+        node = Var(self.current_token)
+        self.eat(ID)
+        return node
+
+    def empty(self):
+        return NoOP()
 
     def parse(self):
         return self.expr()
