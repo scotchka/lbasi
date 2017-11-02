@@ -6,7 +6,7 @@ def test_interpreter():
         BEGIN
             BEGIN
                 number := 2;
-                a := number;
+                a := number; { this is a comment }
                 b := 10 * a + 10 * number DIV 4;
                 c := a - - b
             END;
@@ -32,7 +32,7 @@ def test_case_insensitive():
                 B := 10 * a + 10 * _NUM_BER div 4;
                 c := a - - b
             enD;
-
+{ this is a comment }
         x := 11
         END.
     """
