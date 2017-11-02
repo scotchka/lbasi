@@ -42,9 +42,11 @@ SYMBOLS = {
 }
 
 RESERVED_KEYWORDS = {
-    'BEGIN',
-    'END',
-    'DIV',
-    'PROGRAM',
-    'VAR'
+    'BEGIN':Token('BEGIN', 'BEGIN'),
+    'END':Token('END', 'END'),
+    'DIV': Token('INTEGER_DIV', 'DIV'),
+    'PROGRAM': Token('PROGRAM', 'PROGRAM'),
+    'VAR': Token('VAR', 'VAR'),
+    'INTEGER': Token('INTEGER', 'INTEGER'),
+    'REAL': Token('REAL', 'REAL')
 }
