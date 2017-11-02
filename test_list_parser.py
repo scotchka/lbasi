@@ -1,4 +1,4 @@
-from list_parser import Parse
+from src.list_parser import Parse
 
 parse = Parse()
 

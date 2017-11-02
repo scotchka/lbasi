@@ -1,7 +1,7 @@
-from lexer import Lexer
-from parser import Parser
-from interpreter import Interpreter
-from errors import CompilerError
+from src.lexer import Lexer
+from src.parser import Parser
+from src.interpreter import Interpreter
+from src.errors import CompilerError
 
 if __name__ == '__main__':
     import sys

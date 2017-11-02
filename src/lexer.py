@@ -1,15 +1,7 @@
 from errors import LexerError
-from constants import SYMBOLS, INTEGER, EOF, RESERVED_KEYWORDS, ID, ASSIGN, SEMI, DOT, DIVIDE
+from constants import SYMBOLS, INTEGER, EOF, RESERVED_KEYWORDS, ID, ASSIGN, SEMI, DOT, INTEGER_DIV
 
-
-class Token(object):
-    def __init__(self, type_, value):
-        self.type = type_
-        self.value = value
-        # print type_, value
-
-    def __repr__(self):
-        return '< Token {type_}: {value} >'.format(type_=self.type, value=self.value)
+from token import Token
 
 
 class Lexer(object):
@@ -53,7 +45,7 @@ class Lexer(object):
             if result in {'BEGIN', 'END'}:
                 return Token(result, result)
             elif result == 'DIV':
-                return Token(DIVIDE, result)
+                return Token(INTEGER_DIV, result)
             else:
                 self.error()
 

@@ -1,12 +1,15 @@
 import operator
+from token import Token
 
 # token types
 
 INTEGER = 'INTEGER'
+REAL = 'REAL'
 PLUS = 'PLUS'
 MINUS = 'MINUS'
 MULTIPLY = 'MULTIPLY'
-DIVIDE = 'DIVIDE'
+INTEGER_DIV = 'INTEGER_DIV'
+FLOAT_DIV = 'FLOAT_DIV'
 EOF = 'EOF'
 LPARENS = 'LPARENS'
 RPARENS = 'RPARENS'
@@ -16,20 +19,24 @@ SEMI = 'SEMI'
 DOT = 'DOT'
 ID = 'ID'
 ASSIGN = 'ASSIGN'
-
+COLON = 'COLON'
+COMMA = 'COMMA'
+INTEGER_CONST = 'INTEGER_CONST'
+REAL_CONST = 'REAL_CONST'
 
 OPS = {
     PLUS: operator.add,
     MINUS: operator.sub,
     MULTIPLY: operator.mul,
-    DIVIDE: operator.div
+    INTEGER_DIV: operator.floordiv,
+    FLOAT_DIV: operator.truediv
 }
 
 SYMBOLS = {
     '+': PLUS,
     '-': MINUS,
     '*': MULTIPLY,
-    '/': DIVIDE,
+    '/': FLOAT_DIV,
     '(': LPARENS,
     ')': RPARENS
 }
@@ -37,5 +44,7 @@ SYMBOLS = {
 RESERVED_KEYWORDS = {
     'BEGIN',
     'END',
-    'DIV'
+    'DIV',
+    'PROGRAM',
+    'VAR'
 }

@@ -1,5 +1,5 @@
 from errors import ParserError
-from constants import (INTEGER, PLUS, MINUS, MULTIPLY, DIVIDE, LPARENS, RPARENS, DOT,
+from constants import (INTEGER, PLUS, MINUS, MULTIPLY, INTEGER_DIV, LPARENS, RPARENS, DOT,
                        BEGIN, END, SEMI, ID, ASSIGN, EOF)
 
 
@@ -98,7 +98,7 @@ class Parser(object):
 
         node = self.factor()
 
-        while self.current_token.type in (MULTIPLY, DIVIDE):
+        while self.current_token.type in (MULTIPLY, INTEGER_DIV):
             token = self.current_token
             self.eat(token.type)
             node = BinOp(left=node, op=token, right=self.factor())
