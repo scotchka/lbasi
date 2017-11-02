@@ -62,7 +62,7 @@ class Interpreter(NodeVisitor):
     def visit_VarDecl(self, node):
         pass
 
-    def visit_Type(self,node):
+    def visit_Type(self, node):
         pass
 
     def interpret(self):
