@@ -1,5 +1,6 @@
 from errors import LexerError
-from constants import SYMBOLS, INTEGER, EOF, RESERVED_KEYWORDS, ID, ASSIGN, SEMI, DOT, INTEGER_DIV
+from constants import (SYMBOLS, EOF, RESERVED_KEYWORDS, ID, ASSIGN, SEMI, DOT, INTEGER_DIV,
+                       INTEGER_CONST, REAL_CONST, COLON, COMMA, FLOAT_DIV)
 
 from token import Token
 
@@ -31,12 +32,23 @@ class Lexer(object):
             self.advance()
         self.advance()
 
-    def integer(self):
+    def number(self):
         digits = []
         while self.current_char is not None and self.current_char.isdigit():
             digits.append(self.current_char)
             self.advance()
-        return int(''.join(digits))
+
+        if self.current_char == '.':
+            digits.append(self.current_char)
+            self.advance()
+
+            while self.current_char is not None and self.current_char.isdigit():
+                digits.append(self.current_char)
+                self.advance()
+
+            return Token(REAL_CONST, float(''.join(digits)))
+
+        return Token(INTEGER_CONST, int(''.join(digits)))
 
     def _id(self):
         result = ''
@@ -70,7 +82,7 @@ class Lexer(object):
                 continue
 
             if self.current_char.isdigit():
-                return Token(INTEGER, self.integer())
+                return self.number()
 
             if self.current_char in SYMBOLS:
                 current_char = self.current_char
@@ -92,6 +104,18 @@ class Lexer(object):
             if self.current_char == '.':
                 self.advance()
                 return Token(DOT, '.')
+
+            if self.current_char == ':':
+                self.advance()
+                return Token(COLON, ':')
+
+            if self.current_char == ',':
+                self.advance()
+                return Token(COMMA, ',')
+
+            if self.current_char == '/':
+                self.advance()
+                return Token(FLOAT_DIV, '/')
 
             self.error()
 

@@ -1,6 +1,6 @@
 from errors import ParserError
-from constants import (INTEGER, PLUS, MINUS, MULTIPLY, INTEGER_DIV, LPARENS, RPARENS, DOT,
-                       BEGIN, END, SEMI, ID, ASSIGN, EOF)
+from constants import (INTEGER_CONST, PLUS, MINUS, MULTIPLY, INTEGER_DIV, LPARENS, RPARENS, DOT,
+                       BEGIN, END, SEMI, ID, ASSIGN, EOF, REAL_CONST)
 
 
 class AST(object):
@@ -80,8 +80,8 @@ class Parser(object):
 
         """
         token = self.current_token
-        if token.type == INTEGER:
-            self.eat(INTEGER)
+        if token.type in {INTEGER_CONST, REAL_CONST}:
+            self.eat(token.type)
             return Num(token)
         elif token.type == LPARENS:
             self.eat(LPARENS)

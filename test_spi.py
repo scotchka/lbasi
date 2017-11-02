@@ -10,7 +10,7 @@ def test_interpreter():
                 b := 10 * a + 10 * number DIV 4;
                 c := a - - b
             END;
-            x := 11;
+            x := 11.2;
         END.
         """
 
@@ -19,7 +19,7 @@ def test_interpreter():
     interpreter = Interpreter(parser)
     interpreter.interpret()
 
-    assert interpreter.GLOBAL_SCOPE == {'A': 2, 'X': 11, 'C': 27, 'B': 25, 'NUMBER': 2}
+    assert interpreter.GLOBAL_SCOPE == {'A': 2, 'X': 11.2, 'C': 27, 'B': 25, 'NUMBER': 2}
 
 
 def test_case_insensitive():
