@@ -64,6 +64,7 @@ def test_part10():
           c := a - - b
         END;
           x := 11;
+          x := x / 2;
           y := 20 / 7 + 3.14;
           { writeln('a = ', a); }
           { writeln('b = ', b); }
@@ -80,4 +81,4 @@ def test_part10():
     interpreter = Interpreter(parser)
     interpreter.interpret()
 
-    assert interpreter.GLOBAL_SCOPE == {'A': 2, 'C': 27, 'B': 25, 'NUMBER': 2, 'Y': 5.997142857142857, 'X': 11}
+    assert interpreter.GLOBAL_SCOPE == {'A': 2, 'C': 27, 'B': 25, 'NUMBER': 2, 'Y': 5.997142857142857, 'X': 5.5}
