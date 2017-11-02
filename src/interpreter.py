@@ -1,5 +1,5 @@
 from errors import InterpreterError
-from constants import OPS, PLUS, MINUS, MULTIPLY, INTEGER_DIV
+from constants import OPS, PLUS, MINUS, MULTIPLY, INTEGER_DIV, FLOAT_DIV
 
 
 class NodeVisitor(object):
@@ -18,7 +18,7 @@ class Interpreter(NodeVisitor):
         self.GLOBAL_SCOPE = {}
 
     def visit_BinOp(self, node):
-        if node.op.type in (PLUS, MINUS, MULTIPLY, INTEGER_DIV):
+        if node.op.type in (PLUS, MINUS, MULTIPLY, INTEGER_DIV, FLOAT_DIV):
             return OPS[node.op.type](self.visit(node.left), self.visit(node.right))
         else:
             raise InterpreterError('unknown binary operation')
@@ -49,6 +49,21 @@ class Interpreter(NodeVisitor):
         name = node.value
         value = self.GLOBAL_SCOPE[name]
         return value
+
+    def visit_Program(self, node):
+        self.visit(node.block)
+
+    def visit_Block(self, node):
+        for declaration in node.declarations:
+            self.visit(declaration)
+
+        self.visit(node.compound_statement)
+
+    def visit_VarDecl(self, node):
+        pass
+
+    def visit_Type(self,node):
+        pass
 
     def interpret(self):
         ast = self.parser.parse()

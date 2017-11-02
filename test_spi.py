@@ -2,7 +2,8 @@ from spi import Lexer, Parser, Interpreter
 
 
 def test_interpreter():
-    text = """
+    text = r"""
+        PROGRAM HELLO_WORLD;
         BEGIN
             BEGIN
                 number := 2;
@@ -23,7 +24,8 @@ def test_interpreter():
 
 
 def test_case_insensitive():
-    text = """
+    text = r"""
+        program hello_world;
         BEGIN
 
             BEgIN
@@ -43,3 +45,39 @@ def test_case_insensitive():
     interpreter.interpret()
 
     assert interpreter.GLOBAL_SCOPE == {'A': 2, 'X': 11, 'C': 27, 'B': 25, '_NUM_BER': 2}
+
+
+def test_part10():
+    text = r"""
+    PROGRAM Part10;
+VAR
+  number : INTEGER;
+  a, b, c, x : INTEGER;
+  y : REAL;
+
+BEGIN
+  {Part10}
+BEGIN
+  number := 2;
+  a := number;
+  b := 10 * a + 10 * number DIV 4;
+  c := a - - b
+END;
+  x := 11;
+  y := 20 / 7 + 3.14;
+  { writeln('a = ', a); }
+  { writeln('b = ', b); }
+  { writeln('c = ', c); }
+  { writeln('number = ', number); }
+  { writeln('x = ', x); }
+  { writeln('y = ', y); }
+END.  {Part10}
+
+    """
+
+    lexer = Lexer(text)
+    parser = Parser(lexer)
+    interpreter = Interpreter(parser)
+    interpreter.interpret()
+
+    assert interpreter.GLOBAL_SCOPE == {'A': 2, 'C': 27, 'B': 25, 'NUMBER': 2, 'Y': 5.997142857142857, 'X': 11}

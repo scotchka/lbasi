@@ -59,18 +59,14 @@ class Lexer(object):
         result = result.upper()
 
         if result in RESERVED_KEYWORDS:
-            if result in {'BEGIN', 'END'}:
-                return Token(result, result)
-            elif result == 'DIV':
-                return Token(INTEGER_DIV, result)
-            else:
-                self.error()
+            return RESERVED_KEYWORDS[result]
 
         return Token(ID, result)
 
     def get_next_token(self):
 
         while self.current_char is not None:
+            # print 'current char:', self.current_char
 
             if self.current_char.isspace():
                 self.skip_whitespace()
