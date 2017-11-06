@@ -5,6 +5,11 @@ from spi import Lexer, Parser, Interpreter, SymbolTableBuilder
 def test_interpreter():
     text = r"""
         PROGRAM HELLO_WORLD;
+        
+        VAR
+        number, a, b, c: INTEGER;
+        x: REAL;
+        
         BEGIN
             BEGIN
                 number := 2;
@@ -19,6 +24,7 @@ def test_interpreter():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
+    SymbolTableBuilder().visit(tree)
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
@@ -28,6 +34,11 @@ def test_interpreter():
 def test_case_insensitive():
     text = r"""
         program hello_world;
+        
+        VAR
+        _num_ber, a, b, c: INTEGER;
+        x: integer;
+        
         BEGIN
 
             BEgIN
@@ -44,6 +55,7 @@ def test_case_insensitive():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
+    SymbolTableBuilder().visit(tree)
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
@@ -82,6 +94,7 @@ def test_part10():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
+    SymbolTableBuilder().visit(tree)
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
