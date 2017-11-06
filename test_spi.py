@@ -1,3 +1,4 @@
+import pytest
 from spi import Lexer, Parser, Interpreter
 from src.symbol import SymbolTableBuilder
 
@@ -103,3 +104,49 @@ def test_symbol_table_builder():
     symtab_builder.visit(tree)
 
     assert repr(symtab_builder.symtab) == 'Symbols: [INTEGER, REAL, <X: INTEGER>, <Y: REAL>]'
+
+def test_symtab_exception1():
+    text = """
+    PROGRAM NameError1;
+    VAR
+       a : INTEGER;
+    
+    BEGIN
+       a := 2 + b;
+    END.
+    """
+
+    lexer = Lexer(text)
+    parser = Parser(lexer)
+    tree = parser.parse()
+    symtab_builder = SymbolTableBuilder()
+
+    with pytest.raises(NameError) as e:
+        symtab_builder.visit(tree)
+
+    assert e.typename == 'NameError'
+    assert e.value.message == "'B'"
+
+
+def test_symtab_exception2():
+    text = """
+    PROGRAM NameError2;
+    VAR
+       b : INTEGER;
+    
+    BEGIN
+       b := 1;
+       a := b + 2;
+    END.
+    """
+
+    lexer = Lexer(text)
+    parser = Parser(lexer)
+    tree = parser.parse()
+    symtab_builder = SymbolTableBuilder()
+
+    with pytest.raises(NameError) as e:
+        symtab_builder.visit(tree)
+
+    assert e.typename == 'NameError'
+    assert e.value.message == "'A'"
