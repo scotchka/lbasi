@@ -1,6 +1,5 @@
 import pytest
-from spi import Lexer, Parser, Interpreter
-from src.symbol import SymbolTableBuilder
+from spi import Lexer, Parser, Interpreter, SymbolTableBuilder
 
 
 def test_interpreter():
@@ -19,7 +18,8 @@ def test_interpreter():
 
     lexer = Lexer(text)
     parser = Parser(lexer)
-    interpreter = Interpreter(parser)
+    tree = parser.parse()
+    interpreter = Interpreter(tree)
     interpreter.interpret()
 
     assert interpreter.GLOBAL_SCOPE == {'A': 2, 'X': 11.2, 'C': 27, 'B': 25, 'NUMBER': 2}
@@ -43,7 +43,8 @@ def test_case_insensitive():
 
     lexer = Lexer(text)
     parser = Parser(lexer)
-    interpreter = Interpreter(parser)
+    tree = parser.parse()
+    interpreter = Interpreter(tree)
     interpreter.interpret()
 
     assert interpreter.GLOBAL_SCOPE == {'A': 2, 'X': 11, 'C': 27, 'B': 25, '_NUM_BER': 2}
@@ -80,7 +81,8 @@ def test_part10():
 
     lexer = Lexer(text)
     parser = Parser(lexer)
-    interpreter = Interpreter(parser)
+    tree = parser.parse()
+    interpreter = Interpreter(tree)
     interpreter.interpret()
 
     assert interpreter.GLOBAL_SCOPE == {'A': 2, 'C': 27, 'B': 25, 'NUMBER': 2, 'Y': 5.997142857142857, 'X': 5.5}
