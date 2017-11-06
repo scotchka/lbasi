@@ -100,6 +100,7 @@ def test_part10():
 
     assert interpreter.GLOBAL_SCOPE == {'A': 2, 'C': 27, 'B': 25, 'NUMBER': 2, 'Y': 5.997142857142857, 'X': 5.5}
 
+
 def test_symbol_table_builder():
     text = """
     PROGRAM Part11;
@@ -119,6 +120,7 @@ def test_symbol_table_builder():
     symtab_builder.visit(tree)
 
     assert repr(symtab_builder.symtab) == 'Symbols: [INTEGER, REAL, <X: INTEGER>, <Y: REAL>]'
+
 
 def test_symtab_exception1():
     text = """
@@ -165,3 +167,35 @@ def test_symtab_exception2():
 
     assert e.typename == 'NameError'
     assert e.value.message == "'A'"
+
+
+def test_part11():
+    text = """
+        PROGRAM Part11;
+    VAR
+       number : INTEGER;
+       a, b   : INTEGER;
+       y      : REAL;
+    
+    BEGIN {Part11}
+       number := 2;
+       a := number ;
+       b := 10 * a + 10 * number DIV 4;
+       y := 20 / 7 + 3.14
+    END.  {Part11}
+    """
+    lexer = Lexer(text)
+    parser = Parser(lexer)
+    tree = parser.parse()
+    symtab_builder = SymbolTableBuilder()
+    symtab_builder.visit(tree)
+    interpreter = Interpreter(tree)
+    interpreter.interpret()
+
+    assert repr(
+        symtab_builder.symtab) == 'Symbols: [INTEGER, REAL, <NUMBER: INTEGER>, <A: INTEGER>, <B: INTEGER>, <Y: REAL>]'
+
+    assert interpreter.GLOBAL_SCOPE == dict(A=2,
+                                            B=25,
+                                            NUMBER=2,
+                                            Y=5.997142857142857)
