@@ -1,4 +1,5 @@
 from spi import Lexer, Parser, Interpreter
+from src.symbol import SymbolTableBuilder
 
 
 def test_interpreter():
@@ -82,3 +83,23 @@ def test_part10():
     interpreter.interpret()
 
     assert interpreter.GLOBAL_SCOPE == {'A': 2, 'C': 27, 'B': 25, 'NUMBER': 2, 'Y': 5.997142857142857, 'X': 5.5}
+
+def test_symbol_table_builder():
+    text = """
+    PROGRAM Part11;
+    VAR
+       x : INTEGER;
+       y : REAL;
+    
+    BEGIN
+    
+    END.
+    """
+
+    lexer = Lexer(text)
+    parser = Parser(lexer)
+    tree = parser.parse()
+    symtab_builder = SymbolTableBuilder()
+    symtab_builder.visit(tree)
+
+    assert repr(symtab_builder.symtab) == 'Symbols: [INTEGER, REAL, <X: INTEGER>, <Y: REAL>]'
