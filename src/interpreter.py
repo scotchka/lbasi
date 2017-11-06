@@ -1,15 +1,7 @@
 from errors import InterpreterError
 from constants import OPS, PLUS, MINUS, MULTIPLY, INTEGER_DIV, FLOAT_DIV
 
-
-class NodeVisitor(object):
-    def visit(self, node):
-        method_name = 'visit_' + type(node).__name__
-        visitor = getattr(self, method_name, self.generic_visit)
-        return visitor(node)
-
-    def generic_visit(self, node):
-        raise InterpreterError('No visit_{} method'.format(type(node).__name__))
+from node_visitor import NodeVisitor
 
 
 class Interpreter(NodeVisitor):
