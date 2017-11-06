@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from node_visitor import NodeVisitor
 
+
 class Symbol(object):
     def __init__(self, name, type=None):
         self.name = name

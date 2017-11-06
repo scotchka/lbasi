@@ -1,5 +1,6 @@
 from errors import InterpreterError
 
+
 class NodeVisitor(object):
     def visit(self, node):
         method_name = 'visit_' + type(node).__name__

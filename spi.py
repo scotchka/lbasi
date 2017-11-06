@@ -6,6 +6,7 @@ from src.errors import CompilerError
 
 if __name__ == '__main__':
     import sys
+
     with open(sys.argv[1]) as f:
         text = f.read()
 
@@ -23,5 +24,5 @@ if __name__ == '__main__':
 
     print
     print 'Runtime GLOBAL_MEMORY contents:'
-    for k, v in  sorted(interpreter.GLOBAL_SCOPE.items()):
+    for k, v in sorted(interpreter.GLOBAL_SCOPE.items()):
         print '%s = %s' % (k, v)
