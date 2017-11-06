@@ -5,8 +5,8 @@ from node_visitor import NodeVisitor
 
 
 class Interpreter(NodeVisitor):
-    def __init__(self, parser):
-        self.parser = parser
+    def __init__(self, tree):
+        self.tree = tree
         self.GLOBAL_SCOPE = {}
 
     def visit_BinOp(self, node):
@@ -58,5 +58,4 @@ class Interpreter(NodeVisitor):
         pass
 
     def interpret(self):
-        ast = self.parser.parse()
-        return self.visit(ast)
+        return self.visit(self.tree)

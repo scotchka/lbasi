@@ -1,6 +1,7 @@
 from src.lexer import Lexer
 from src.parser import Parser
 from src.interpreter import Interpreter
+from src.symbol import SymbolTableBuilder
 from src.errors import CompilerError
 
 if __name__ == '__main__':
@@ -10,6 +11,17 @@ if __name__ == '__main__':
 
     lexer = Lexer(text)
     parser = Parser(lexer)
-    interpreter = Interpreter(parser)
+    tree = parser.parse()
+    symtab_builder = SymbolTableBuilder()
+    symtab_builder.visit(tree)
+    print
+    print 'Symbol Table contents:'
+    print symtab_builder.symtab
+
+    interpreter = Interpreter(tree)
     result = interpreter.interpret()
-    print interpreter.GLOBAL_SCOPE
+
+    print
+    print 'Runtime GLOBAL_MEMORY contents:'
+    for k, v in  sorted(interpreter.GLOBAL_SCOPE.items()):
+        print '%s = %s' % (k, v)
