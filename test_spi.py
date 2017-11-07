@@ -1,5 +1,9 @@
 import pytest
 from spi import Lexer, Parser, Interpreter, SymbolTableBuilder
+from src.symbol import BuiltinTypeSymbol, VarSymbol
+
+integer_type = BuiltinTypeSymbol('INTEGER')
+real_type = BuiltinTypeSymbol('REAL')
 
 
 def test_interpreter():
@@ -119,7 +123,12 @@ def test_symbol_table_builder():
     symtab_builder = SymbolTableBuilder()
     symtab_builder.visit(tree)
 
-    assert repr(symtab_builder.symtab) == 'Symbols: [INTEGER, REAL, <X: INTEGER>, <Y: REAL>]'
+    assert symtab_builder.symtab._symbols == {
+        'INTEGER': integer_type,
+        'REAL': real_type,
+        'X': VarSymbol('X', integer_type),
+        'Y': VarSymbol('Y', real_type)
+    }
 
 
 def test_symtab_exception1():
@@ -192,8 +201,14 @@ def test_part11():
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert repr(
-        symtab_builder.symtab) == 'Symbols: [INTEGER, REAL, <NUMBER: INTEGER>, <A: INTEGER>, <B: INTEGER>, <Y: REAL>]'
+    assert symtab_builder.symtab._symbols == {
+        'INTEGER': integer_type,
+        'REAL': real_type,
+        'NUMBER': VarSymbol('NUMBER', integer_type),
+        'A': VarSymbol('A', integer_type),
+        'B': VarSymbol('B', integer_type),
+        'Y': VarSymbol('Y', real_type)
+    }
 
     assert interpreter.GLOBAL_SCOPE == dict(A=2,
                                             B=25,
@@ -236,5 +251,10 @@ def test_part12():
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert repr(symtab_builder.symtab) == 'Symbols: [INTEGER, REAL, <A: INTEGER>]'
+    assert symtab_builder.symtab._symbols == {
+        'INTEGER': integer_type,
+        'REAL': real_type,
+        'A': VarSymbol('A', integer_type)
+    }
+
     assert interpreter.GLOBAL_SCOPE == {'A': 10}
