@@ -1,6 +1,6 @@
 import pytest
 from spi import Lexer, Parser, Interpreter, SemanticAnalyzer
-from src.semantic_analyzer import BuiltinTypeSymbol, VarSymbol
+from src.symbol import BuiltinTypeSymbol, VarSymbol
 
 integer_type = BuiltinTypeSymbol('INTEGER')
 real_type = BuiltinTypeSymbol('REAL')
