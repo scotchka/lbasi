@@ -50,9 +50,14 @@ class SymbolTable(object):
         self.insert(BuiltinTypeSymbol('REAL'))
 
     def __repr__(self):
-        return 'Symbols: {symbols}'.format(
-            symbols=[val for val in self._symbols.values()]
+        symtab_header = 'Symbol table contents'
+        lines = ['\n', symtab_header, '_' * len(symtab_header)]
+        lines.extend(
+            ('%7s: %r' % (key, value))
+            for key, value in self._symbols.items()
         )
+        lines.append('\n')
+        return '\n'.join(lines)
 
     def insert(self, symbol):
         print 'Insert: %s' % symbol.name
@@ -63,7 +68,7 @@ class SymbolTable(object):
         return self._symbols.get(name)
 
 
-class SymbolTableBuilder(NodeVisitor):
+class SemanticAnalyzer(NodeVisitor):
     def __init__(self):
         self.symtab = SymbolTable()
 

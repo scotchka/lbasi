@@ -1,6 +1,6 @@
 import pytest
-from spi import Lexer, Parser, Interpreter, SymbolTableBuilder
-from src.symbol import BuiltinTypeSymbol, VarSymbol
+from spi import Lexer, Parser, Interpreter, SemanticAnalyzer
+from src.semantic_analyzer import BuiltinTypeSymbol, VarSymbol
 
 integer_type = BuiltinTypeSymbol('INTEGER')
 real_type = BuiltinTypeSymbol('REAL')
@@ -28,7 +28,7 @@ def test_interpreter():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
-    SymbolTableBuilder().visit(tree)
+    SemanticAnalyzer().visit(tree)
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
@@ -59,7 +59,7 @@ def test_case_insensitive():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
-    SymbolTableBuilder().visit(tree)
+    SemanticAnalyzer().visit(tree)
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
@@ -98,7 +98,7 @@ def test_part10():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
-    SymbolTableBuilder().visit(tree)
+    SemanticAnalyzer().visit(tree)
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
@@ -120,7 +120,7 @@ def test_symbol_table_builder():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
-    symtab_builder = SymbolTableBuilder()
+    symtab_builder = SemanticAnalyzer()
     symtab_builder.visit(tree)
 
     assert symtab_builder.symtab._symbols == {
@@ -145,7 +145,7 @@ def test_symtab_exception1():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
-    symtab_builder = SymbolTableBuilder()
+    symtab_builder = SemanticAnalyzer()
 
     with pytest.raises(NameError) as e:
         symtab_builder.visit(tree)
@@ -169,7 +169,7 @@ def test_symtab_exception2():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
-    symtab_builder = SymbolTableBuilder()
+    symtab_builder = SemanticAnalyzer()
 
     with pytest.raises(NameError) as e:
         symtab_builder.visit(tree)
@@ -196,7 +196,7 @@ def test_part11():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
-    symtab_builder = SymbolTableBuilder()
+    symtab_builder = SemanticAnalyzer()
     symtab_builder.visit(tree)
     interpreter = Interpreter(tree)
     interpreter.interpret()
@@ -246,7 +246,7 @@ def test_part12():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
-    symtab_builder = SymbolTableBuilder()
+    symtab_builder = SemanticAnalyzer()
     symtab_builder.visit(tree)
     interpreter = Interpreter(tree)
     interpreter.interpret()

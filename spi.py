@@ -1,7 +1,7 @@
 from src.lexer import Lexer
 from src.parser import Parser
 from src.interpreter import Interpreter
-from src.symbol import SymbolTableBuilder
+from src.semantic_analyzer import SemanticAnalyzer
 from src.errors import CompilerError
 
 if __name__ == '__main__':
@@ -13,7 +13,7 @@ if __name__ == '__main__':
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
-    symtab_builder = SymbolTableBuilder()
+    symtab_builder = SemanticAnalyzer()
     symtab_builder.visit(tree)
     print
     print 'Symbol Table contents:'
