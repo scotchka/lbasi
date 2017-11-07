@@ -96,3 +96,6 @@ class SymbolTableBuilder(NodeVisitor):
         var_symbol = self.symtab.lookup(var_name)
         if var_symbol is None:
             raise NameError(repr(var_name))
+
+    def visit_ProcedureDecl(self, node):
+        pass

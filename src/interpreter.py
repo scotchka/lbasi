@@ -57,5 +57,8 @@ class Interpreter(NodeVisitor):
     def visit_Type(self, node):
         pass
 
+    def visit_ProcedureDecl(self, node):
+        pass
+
     def interpret(self):
         return self.visit(self.tree)

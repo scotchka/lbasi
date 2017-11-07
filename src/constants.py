@@ -25,6 +25,7 @@ INTEGER_CONST = 'INTEGER_CONST'
 REAL_CONST = 'REAL_CONST'
 VAR = 'VAR'
 PROGRAM = 'PROGRAM'
+PROCEDURE = 'PROCEDURE'
 
 OPS = {
     PLUS: operator.add,
@@ -50,5 +51,6 @@ RESERVED_KEYWORDS = {
     'PROGRAM': Token('PROGRAM', 'PROGRAM'),
     'VAR': Token('VAR', 'VAR'),
     'INTEGER': Token('INTEGER', 'INTEGER'),
-    'REAL': Token('REAL', 'REAL')
+    'REAL': Token('REAL', 'REAL'),
+    'PROCEDURE': Token('PROCEDURE', 'PROCEDURE')
 }

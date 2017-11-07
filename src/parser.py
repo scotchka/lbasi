@@ -1,9 +1,9 @@
 from errors import ParserError
 from constants import (INTEGER_CONST, PLUS, MINUS, MULTIPLY, INTEGER_DIV, LPARENS, RPARENS, DOT,
                        BEGIN, END, SEMI, ID, ASSIGN, EOF, REAL_CONST, VAR, COMMA, COLON, REAL, INTEGER,
-                       PROGRAM, FLOAT_DIV)
+                       PROGRAM, FLOAT_DIV, PROCEDURE)
 
-from ast import Num, UnaryOp, BinOp, Block, Assign, Program, Compound, Type, VarDecl, Var, NoOp
+from ast import Num, UnaryOp, BinOp, Block, Assign, Program, Compound, Type, VarDecl, Var, NoOp, ProcedureDecl
 
 
 class Parser(object):
@@ -100,6 +100,15 @@ class Parser(object):
                 var_decl = self.variable_declaration()
                 declarations.extend(var_decl)
                 self.eat(SEMI)
+
+        while self.current_token.type == PROCEDURE:
+            self.eat(PROCEDURE)
+            proc_name = self.current_token.value
+            self.eat(ID)
+            self.eat(SEMI)
+            block_node = self.block()
+            declarations.append(ProcedureDecl(proc_name,block_node))
+            self.eat(SEMI)
 
         return declarations
 
