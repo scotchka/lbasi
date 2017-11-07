@@ -199,3 +199,42 @@ def test_part11():
                                             B=25,
                                             NUMBER=2,
                                             Y=5.997142857142857)
+
+
+def test_part12():
+    text = """
+    PROGRAM Part12;
+    VAR
+       a : INTEGER;
+    
+    PROCEDURE P1;
+    VAR
+       a : REAL;
+       k : INTEGER;
+    
+       PROCEDURE P2;
+       VAR
+          a, z : INTEGER;
+       BEGIN {P2}
+          z := 777;
+       END;  {P2}
+    
+    BEGIN {P1}
+    
+    END;  {P1}
+    
+    BEGIN {Part12}
+       a := 10;
+    END.  {Part12}
+    """
+
+    lexer = Lexer(text)
+    parser = Parser(lexer)
+    tree = parser.parse()
+    symtab_builder = SymbolTableBuilder()
+    symtab_builder.visit(tree)
+    interpreter = Interpreter(tree)
+    interpreter.interpret()
+
+    assert repr(symtab_builder.symtab) == 'Symbols: [INTEGER, REAL, <A: INTEGER>]'
+    assert interpreter.GLOBAL_SCOPE == {'A': 10}

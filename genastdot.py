@@ -8,7 +8,7 @@ import argparse
 import textwrap
 
 from spi import Lexer, Parser
-from src.interpreter import NodeVisitor
+from src.node_visitor import NodeVisitor
 
 
 class ASTVisualizer(NodeVisitor):
@@ -68,6 +68,19 @@ class ASTVisualizer(NodeVisitor):
 
         self.visit(node.type_node)
         s = '  node{} -> node{}\n'.format(node._num, node.type_node._num)
+        self.dot_body.append(s)
+
+    def visit_ProcedureDecl(self, node):
+        s = '  node{} [label="ProcDecl:{}"]\n'.format(
+            self.ncount,
+            node.proc_name
+        )
+        self.dot_body.append(s)
+        node._num = self.ncount
+        self.ncount += 1
+
+        self.visit(node.block_node)
+        s = '  node{} -> node{}\n'.format(node._num, node.block_node._num)
         self.dot_body.append(s)
 
     def visit_Type(self, node):
