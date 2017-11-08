@@ -2,7 +2,6 @@ from src.lexer import Lexer
 from src.parser import Parser
 from src.interpreter import Interpreter
 from src.semantic_analyzer import SemanticAnalyzer
-from src.errors import CompilerError
 
 if __name__ == '__main__':
     import sys

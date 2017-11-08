@@ -12,3 +12,15 @@ class LexerError(CompilerError):
 
 class InterpreterError(CompilerError):
     pass
+
+
+class SemanticError(Exception):
+    pass
+
+
+class UndeclaredVariable(SemanticError):
+    pass
+
+
+class DuplicateDeclaration(SemanticError):
+    pass

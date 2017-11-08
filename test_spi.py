@@ -1,6 +1,7 @@
 import pytest
 from spi import Lexer, Parser, Interpreter, SemanticAnalyzer
 from src.symbol import BuiltinTypeSymbol, VarSymbol
+from src.errors import UndeclaredVariable, DuplicateDeclaration
 
 integer_type = BuiltinTypeSymbol('INTEGER')
 real_type = BuiltinTypeSymbol('REAL')
@@ -147,10 +148,10 @@ def test_symtab_exception1():
     tree = parser.parse()
     symtab_builder = SemanticAnalyzer()
 
-    with pytest.raises(NameError) as e:
+    with pytest.raises(UndeclaredVariable) as e:
         symtab_builder.visit(tree)
 
-    assert e.typename == 'NameError'
+    assert e.typename == 'UndeclaredVariable'
     assert e.value.message == "'B'"
 
 
@@ -171,10 +172,10 @@ def test_symtab_exception2():
     tree = parser.parse()
     symtab_builder = SemanticAnalyzer()
 
-    with pytest.raises(NameError) as e:
+    with pytest.raises(UndeclaredVariable) as e:
         symtab_builder.visit(tree)
 
-    assert e.typename == 'NameError'
+    assert e.typename == 'UndeclaredVariable'
     assert e.value.message == "'A'"
 
 
@@ -258,3 +259,25 @@ def test_part12():
     }
 
     assert interpreter.GLOBAL_SCOPE == {'A': 10}
+
+
+def test_duplicate_decl_error():
+    text = """
+    program SymTab6;
+       var x, y : integer;
+       var y : real;
+    begin
+       x := x + y;
+    end.
+    """
+
+    lexer = Lexer(text)
+    parser = Parser(lexer)
+    tree = parser.parse()
+    symtab_builder = SemanticAnalyzer()
+
+    with pytest.raises(DuplicateDeclaration) as e:
+        symtab_builder.visit(tree)
+
+    assert e.typename == 'DuplicateDeclaration'
+    assert e.value.message == "'Y'"

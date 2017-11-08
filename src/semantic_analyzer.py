@@ -1,6 +1,6 @@
 from node_visitor import NodeVisitor
 from symbol import SymbolTable, VarSymbol
-
+from errors import UndeclaredVariable, DuplicateDeclaration
 
 class SemanticAnalyzer(NodeVisitor):
     def __init__(self):
@@ -37,7 +37,7 @@ class SemanticAnalyzer(NodeVisitor):
 
         var_name = node.var_node.value
         if self.symtab.lookup(var_name) is not None:
-            raise NameError(repr(var_name))
+            raise DuplicateDeclaration(repr(var_name))
 
         var_symbol = VarSymbol(var_name, type_symbol)
         self.symtab.insert(var_symbol)
@@ -50,7 +50,7 @@ class SemanticAnalyzer(NodeVisitor):
         var_name = node.value
         var_symbol = self.symtab.lookup(var_name)
         if var_symbol is None:
-            raise NameError(repr(var_name))
+            raise UndeclaredVariable(repr(var_name))
 
     def visit_ProcedureDecl(self, node):
         pass
