@@ -2,6 +2,7 @@ from node_visitor import NodeVisitor
 from symbol import SymbolTable, VarSymbol
 from errors import UndeclaredVariable, DuplicateDeclaration
 
+
 class SemanticAnalyzer(NodeVisitor):
     def __init__(self):
         self.symtab = SymbolTable()
