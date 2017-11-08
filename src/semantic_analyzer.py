@@ -34,7 +34,11 @@ class SemanticAnalyzer(NodeVisitor):
     def visit_VarDecl(self, node):
         type_name = node.type_node.value
         type_symbol = self.symtab.lookup(type_name)
+
         var_name = node.var_node.value
+        if self.symtab.lookup(var_name) is not None:
+            raise NameError(repr(var_name))
+
         var_symbol = VarSymbol(var_name, type_symbol)
         self.symtab.insert(var_symbol)
 

@@ -93,22 +93,25 @@ class Parser(object):
 
     def declarations(self):
         declarations = []
+        while True:
+            if self.current_token.type == VAR:
+                self.eat(VAR)
+                while self.current_token.type == ID:
+                    var_decl = self.variable_declaration()
+                    declarations.extend(var_decl)
+                    self.eat(SEMI)
 
-        if self.current_token.type == VAR:
-            self.eat(VAR)
-            while self.current_token.type == ID:
-                var_decl = self.variable_declaration()
-                declarations.extend(var_decl)
+            elif self.current_token.type == PROCEDURE:
+                self.eat(PROCEDURE)
+                proc_name = self.current_token.value
+                self.eat(ID)
+                self.eat(SEMI)
+                block_node = self.block()
+                declarations.append(ProcedureDecl(proc_name,block_node))
                 self.eat(SEMI)
 
-        while self.current_token.type == PROCEDURE:
-            self.eat(PROCEDURE)
-            proc_name = self.current_token.value
-            self.eat(ID)
-            self.eat(SEMI)
-            block_node = self.block()
-            declarations.append(ProcedureDecl(proc_name,block_node))
-            self.eat(SEMI)
+            else:
+                break
 
         return declarations
 
