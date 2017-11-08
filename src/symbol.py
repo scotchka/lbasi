@@ -39,7 +39,7 @@ class VarSymbol(Symbol):
         return self.name == other.name and self.type == other.type
 
 
-class SymbolTable(object):
+class ScopedSymbolTable(object):
     def __init__(self):
         self._symbols = OrderedDict()
         self._init_builtins()

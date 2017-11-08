@@ -1,11 +1,11 @@
 from node_visitor import NodeVisitor
-from symbol import SymbolTable, VarSymbol
+from symbol import ScopedSymbolTable, VarSymbol
 from errors import UndeclaredVariable, DuplicateDeclaration
 
 
 class SemanticAnalyzer(NodeVisitor):
     def __init__(self):
-        self.symtab = SymbolTable()
+        self.symtab = ScopedSymbolTable()
 
     def visit_Block(self, node):
         for declaration in node.declarations:
