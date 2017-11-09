@@ -121,10 +121,10 @@ def test_symbol_table_builder():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
-    symtab_builder = SemanticAnalyzer()
-    symtab_builder.visit(tree)
+    semantic_analyzer = SemanticAnalyzer()
+    semantic_analyzer.visit(tree)
 
-    assert symtab_builder.scope._symbols == {
+    assert semantic_analyzer.scope._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
         'X': VarSymbol('X', integer_type),
@@ -146,10 +146,10 @@ def test_symtab_exception1():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
-    symtab_builder = SemanticAnalyzer()
+    semantic_analyzer = SemanticAnalyzer()
 
     with pytest.raises(UndeclaredVariable) as e:
-        symtab_builder.visit(tree)
+        semantic_analyzer.visit(tree)
 
     assert e.typename == 'UndeclaredVariable'
     assert e.value.message == "'B'"
@@ -170,10 +170,10 @@ def test_symtab_exception2():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
-    symtab_builder = SemanticAnalyzer()
+    semantic_analyzer = SemanticAnalyzer()
 
     with pytest.raises(UndeclaredVariable) as e:
-        symtab_builder.visit(tree)
+        semantic_analyzer.visit(tree)
 
     assert e.typename == 'UndeclaredVariable'
     assert e.value.message == "'A'"
@@ -197,12 +197,12 @@ def test_part11():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
-    symtab_builder = SemanticAnalyzer()
-    symtab_builder.visit(tree)
+    semantic_analyzer = SemanticAnalyzer()
+    semantic_analyzer.visit(tree)
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert symtab_builder.scope._symbols == {
+    assert semantic_analyzer.scope._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
         'NUMBER': VarSymbol('NUMBER', integer_type),
@@ -247,12 +247,12 @@ def test_part12():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
-    symtab_builder = SemanticAnalyzer()
-    symtab_builder.visit(tree)
+    semantic_analyzer = SemanticAnalyzer()
+    semantic_analyzer.visit(tree)
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert symtab_builder.scope._symbols == {
+    assert semantic_analyzer.scope._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
         'A': VarSymbol('A', integer_type)
@@ -274,10 +274,10 @@ def test_duplicate_decl_error():
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
-    symtab_builder = SemanticAnalyzer()
+    semantic_analyzer = SemanticAnalyzer()
 
     with pytest.raises(DuplicateDeclaration) as e:
-        symtab_builder.visit(tree)
+        semantic_analyzer.visit(tree)
 
     assert e.typename == 'DuplicateDeclaration'
     assert e.value.message == "'Y'"

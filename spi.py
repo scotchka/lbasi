@@ -12,11 +12,11 @@ if __name__ == '__main__':
     lexer = Lexer(text)
     parser = Parser(lexer)
     tree = parser.parse()
-    symtab_builder = SemanticAnalyzer()
-    symtab_builder.visit(tree)
+    semantic_analyzer = SemanticAnalyzer()
+    semantic_analyzer.visit(tree)
     print
     print 'Symbol Table contents:'
-    print symtab_builder.scope
+    print semantic_analyzer.scope
 
     interpreter = Interpreter(tree)
     result = interpreter.interpret()
