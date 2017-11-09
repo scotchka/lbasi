@@ -16,7 +16,7 @@ if __name__ == '__main__':
     symtab_builder.visit(tree)
     print
     print 'Symbol Table contents:'
-    print symtab_builder.symtab
+    print symtab_builder.scope
 
     interpreter = Interpreter(tree)
     result = interpreter.interpret()
