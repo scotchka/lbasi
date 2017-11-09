@@ -281,3 +281,37 @@ def test_duplicate_decl_error():
 
     assert e.typename == 'DuplicateDeclaration'
     assert e.value.message == "'Y'"
+
+def test_formal_parameter():
+    text="""
+        program Main;
+       var x, y: real;
+    
+       procedure Alpha(a : integer);
+          var y : integer;
+       begin
+          x := a + x + y;
+       end;
+    
+    begin { Main }
+    
+    end.  { Main }
+    """
+
+    lexer = Lexer(text)
+    parser = Parser(lexer)
+    tree = parser.parse()
+    semantic_analyzer = SemanticAnalyzer()
+    semantic_analyzer.visit(tree)
+    interpreter = Interpreter(tree)
+    interpreter.interpret()
+
+    assert semantic_analyzer.scope._symbols == {
+        'INTEGER': integer_type,
+        'REAL': real_type,
+        'X': VarSymbol('X', real_type),
+        'Y': VarSymbol('Y', real_type)
+    }
+
+    assert interpreter.GLOBAL_SCOPE == {}
+
