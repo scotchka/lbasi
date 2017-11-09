@@ -8,9 +8,6 @@ class Symbol(object):
 
 
 class BuiltinTypeSymbol(Symbol):
-    def __init__(self, name):
-        super(BuiltinTypeSymbol, self).__init__(name)
-
     def __str__(self):
         return self.name
 
@@ -25,9 +22,6 @@ class BuiltinTypeSymbol(Symbol):
 
 
 class VarSymbol(Symbol):
-    def __init__(self, name, type):
-        super(VarSymbol, self).__init__(name, type)
-
     def __repr__(self):
         return "<{class_name}(name='{name}', type='{type}')>".format(
             class_name=self.__class__.__name__,
@@ -37,6 +31,10 @@ class VarSymbol(Symbol):
 
     def __eq__(self, other):
         return self.name == other.name and self.type == other.type
+
+
+class ProcedureSymbol(Symbol):
+    pass
 
 
 class ScopedSymbolTable(object):
