@@ -3,6 +3,8 @@ from src.parser import Parser
 from src.interpreter import Interpreter
 from src.semantic_analyzer import SemanticAnalyzer
 
+__all__ = ('Lexer', 'Parser', 'Interpreter', 'SemanticAnalyzer')
+
 if __name__ == '__main__':
     import sys
 

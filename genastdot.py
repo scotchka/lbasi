@@ -79,9 +79,29 @@ class ASTVisualizer(NodeVisitor):
         node._num = self.ncount
         self.ncount += 1
 
+        for param_node in node.params:
+            self.visit(param_node)
+            s = '  node{} -> node{}\n'.format(node._num, param_node._num)
+            self.dot_body.append(s)
+
         self.visit(node.block_node)
         s = '  node{} -> node{}\n'.format(node._num, node.block_node._num)
         self.dot_body.append(s)
+
+    def visit_Param(self, node):
+        s = '  node{} [label="Param"]\n'.format(self.ncount)
+        self.dot_body.append(s)
+        node._num = self.ncount
+        self.ncount += 1
+
+        self.visit(node.var_node)
+        s = '  node{} -> node{}\n'.format(node._num, node.var_node._num)
+        self.dot_body.append(s)
+
+        self.visit(node.type_node)
+        s = '  node{} -> node{}\n'.format(node._num, node.type_node._num)
+        self.dot_body.append(s)
+
 
     def visit_Type(self, node):
         s = '  node{} [label="{}"]\n'.format(self.ncount, node.token.value)
