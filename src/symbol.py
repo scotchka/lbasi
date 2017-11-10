@@ -34,7 +34,19 @@ class VarSymbol(Symbol):
 
 
 class ProcedureSymbol(Symbol):
-    pass
+    def __init__(self, name, params=None):
+        super(ProcedureSymbol, self).__init__(name)
+        if params is None:
+            params = []
+
+        self.params = params
+
+    def __repr__(self):
+        return '<{class_name}(name={name}, parameters={params})>'.format(
+            class_name=self.__class__.__name__,
+            name=self.name,
+            params=self.params,
+        )
 
 
 class ScopedSymbolTable(object):
@@ -52,8 +64,8 @@ class ScopedSymbolTable(object):
         h1 = 'SCOPE (SCOPED SYMBOL TABLE)'
         lines = ['\n', h1, '=' * len(h1)]
         for header_name, header_value in (
-            ('Scope name', self.scope_name),
-            ('Scope level', self.scope_level),
+                ('Scope name', self.scope_name),
+                ('Scope level', self.scope_level),
         ):
             lines.append('%-15s: %s' % (header_name, header_value))
         h2 = 'Scope (Scoped symbol table) contents'
