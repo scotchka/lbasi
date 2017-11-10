@@ -14,9 +14,10 @@ class SemanticAnalyzer(NodeVisitor):
 
     def visit_Program(self, node):
         print 'ENTER scope: global'
-        self.current_scope = ScopedSymbolTable(scope_name='global', scope_level=1)
+        global_scope = ScopedSymbolTable(scope_name='global', scope_level=1)
+        self.current_scope = global_scope
         self.visit(node.block)
-        print self.current_scope
+        print global_scope
         print 'LEAVE scope: global'
 
     def visit_BinOp(self, node):
@@ -63,11 +64,11 @@ class SemanticAnalyzer(NodeVisitor):
         self.current_scope.insert(proc_symbol)
 
         print 'ENTER scope: %s' % proc_name
-
-        self.current_scope = ScopedSymbolTable(
+        procedure_scope = ScopedSymbolTable(
             scope_name=proc_name,
             scope_level=self.current_scope.scope_level + 1
         )
+        self.current_scope = procedure_scope
 
         for param in node.params:
             param_type = self.current_scope.lookup(param.type_node.value)
@@ -78,5 +79,5 @@ class SemanticAnalyzer(NodeVisitor):
 
         self.visit(node.block_node)
 
-        print self.current_scope
+        print procedure_scope
         print 'LEAVE scope: %s' % proc_name
