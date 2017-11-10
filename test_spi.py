@@ -124,7 +124,7 @@ def test_symbol_table_builder():
     semantic_analyzer = SemanticAnalyzer()
     semantic_analyzer.visit(tree)
 
-    assert semantic_analyzer.scope._symbols == {
+    assert semantic_analyzer.current_scope._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
         'X': VarSymbol('X', integer_type),
@@ -202,7 +202,7 @@ def test_part11():
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert semantic_analyzer.scope._symbols == {
+    assert semantic_analyzer.current_scope._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
         'NUMBER': VarSymbol('NUMBER', integer_type),
@@ -252,7 +252,7 @@ def test_part12():
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert semantic_analyzer.scope._symbols == {
+    assert semantic_analyzer.current_scope._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
         'A': VarSymbol('A', integer_type)
@@ -306,7 +306,7 @@ def test_formal_parameter():
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert semantic_analyzer.scope._symbols == {
+    assert semantic_analyzer.current_scope._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
         'X': VarSymbol('X', real_type),
