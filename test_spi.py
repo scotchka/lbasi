@@ -1,6 +1,6 @@
 import pytest
 from spi import Lexer, Parser, Interpreter, SemanticAnalyzer
-from src.symbol import BuiltinTypeSymbol, VarSymbol
+from src.symbol import BuiltinTypeSymbol, VarSymbol, ProcedureSymbol
 from src.errors import UndeclaredVariable, DuplicateDeclaration
 
 integer_type = BuiltinTypeSymbol('INTEGER')
@@ -122,9 +122,9 @@ def test_symbol_table_builder():
     parser = Parser(lexer)
     tree = parser.parse()
     semantic_analyzer = SemanticAnalyzer()
-    semantic_analyzer.visit(tree)
+    scope_tree = semantic_analyzer.visit(tree)
 
-    assert semantic_analyzer.current_scope._symbols == {
+    assert scope_tree._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
         'X': VarSymbol('X', integer_type),
@@ -198,11 +198,11 @@ def test_part11():
     parser = Parser(lexer)
     tree = parser.parse()
     semantic_analyzer = SemanticAnalyzer()
-    semantic_analyzer.visit(tree)
+    scope_tree = semantic_analyzer.visit(tree)
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert semantic_analyzer.current_scope._symbols == {
+    assert scope_tree._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
         'NUMBER': VarSymbol('NUMBER', integer_type),
@@ -248,14 +248,15 @@ def test_part12():
     parser = Parser(lexer)
     tree = parser.parse()
     semantic_analyzer = SemanticAnalyzer()
-    semantic_analyzer.visit(tree)
+    scope_tree = semantic_analyzer.visit(tree)
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert semantic_analyzer.current_scope._symbols == {
+    assert scope_tree._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
-        'A': VarSymbol('A', integer_type)
+        'A': VarSymbol('A', integer_type),
+        'P1': ProcedureSymbol('P1')
     }
 
     assert interpreter.GLOBAL_SCOPE == {'A': 10}
@@ -302,15 +303,16 @@ def test_formal_parameter():
     parser = Parser(lexer)
     tree = parser.parse()
     semantic_analyzer = SemanticAnalyzer()
-    semantic_analyzer.visit(tree)
+    scope_tree = semantic_analyzer.visit(tree)
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert semantic_analyzer.current_scope._symbols == {
+    assert scope_tree._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
         'X': VarSymbol('X', real_type),
-        'Y': VarSymbol('Y', real_type)
+        'Y': VarSymbol('Y', real_type),
+        'ALPHA': ProcedureSymbol('ALPHA')
     }
 
     assert interpreter.GLOBAL_SCOPE == {}

@@ -24,6 +24,7 @@ class SemanticAnalyzer(NodeVisitor):
         self.current_scope = self.current_scope.enclosing_scope
 
         print 'LEAVE scope: global'
+        return global_scope
 
     def visit_BinOp(self, node):
         self.visit(node.left)
@@ -74,6 +75,7 @@ class SemanticAnalyzer(NodeVisitor):
             scope_level=self.current_scope.scope_level + 1,
             enclosing_scope=self.current_scope
         )
+        setattr(self.current_scope, proc_name+'_scope', procedure_scope)
         self.current_scope = procedure_scope
 
         for param in node.params:

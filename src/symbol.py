@@ -48,6 +48,9 @@ class ProcedureSymbol(Symbol):
             params=self.params,
         )
 
+    def __eq__(self, other):
+        return self.name == other.name
+
 
 class ScopedSymbolTable(object):
     def __init__(self, scope_name, scope_level, enclosing_scope=None):
