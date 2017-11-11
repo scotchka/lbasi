@@ -1,6 +1,5 @@
 from node_visitor import NodeVisitor
 from symbol import ScopedSymbolTable, VarSymbol, ProcedureSymbol
-from errors import UndeclaredVariable, DuplicateDeclaration
 
 
 class SemanticAnalyzer(NodeVisitor):
@@ -48,8 +47,6 @@ class SemanticAnalyzer(NodeVisitor):
         type_symbol = self.current_scope.lookup(type_name)
 
         var_name = node.var_node.value
-        if var_name in self.current_scope._symbols:
-            raise DuplicateDeclaration(repr(var_name))
 
         var_symbol = VarSymbol(var_name, type_symbol)
         self.current_scope.insert(var_symbol)
@@ -60,9 +57,7 @@ class SemanticAnalyzer(NodeVisitor):
 
     def visit_Var(self, node):
         var_name = node.value
-        var_symbol = self.current_scope.lookup(var_name)
-        if var_symbol is None:
-            raise UndeclaredVariable(repr(var_name))
+        self.current_scope.lookup(var_name)
 
     def visit_ProcedureDecl(self, node):
         proc_name = node.proc_name
