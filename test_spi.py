@@ -259,6 +259,17 @@ def test_part12():
         'P1': ProcedureSymbol('P1')
     }
 
+    assert scope_tree.P1_scope._symbols == {
+        'A': VarSymbol('A', real_type),
+        'K': VarSymbol('K', integer_type),
+        'P2': ProcedureSymbol('P2')
+    }
+
+    assert scope_tree.P1_scope.P2_scope._symbols == {
+        'A': VarSymbol('A', integer_type),
+        'Z': VarSymbol('Z', integer_type)
+    }
+
     assert interpreter.GLOBAL_SCOPE == {'A': 10}
 
 
@@ -313,6 +324,11 @@ def test_formal_parameter():
         'X': VarSymbol('X', real_type),
         'Y': VarSymbol('Y', real_type),
         'ALPHA': ProcedureSymbol('ALPHA')
+    }
+
+    assert scope_tree.ALPHA_scope._symbols == {
+        'A': VarSymbol('A', integer_type),
+        'Y': VarSymbol('Y', integer_type)
     }
 
     assert interpreter.GLOBAL_SCOPE == {}
