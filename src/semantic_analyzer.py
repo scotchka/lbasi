@@ -15,6 +15,7 @@ class SemanticAnalyzer(NodeVisitor):
     def visit_Program(self, node):
         print 'ENTER scope: global'
         global_scope = ScopedSymbolTable(scope_name='global', scope_level=1, enclosing_scope=self.current_scope)
+        global_scope._init_builtins()
         self.current_scope = global_scope
         self.visit(node.block)
 
@@ -46,7 +47,7 @@ class SemanticAnalyzer(NodeVisitor):
         type_symbol = self.current_scope.lookup(type_name)
 
         var_name = node.var_node.value
-        if self.current_scope.lookup(var_name) is not None:
+        if var_name in self.current_scope._symbols:
             raise DuplicateDeclaration(repr(var_name))
 
         var_symbol = VarSymbol(var_name, type_symbol)

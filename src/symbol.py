@@ -55,7 +55,6 @@ class ScopedSymbolTable(object):
         self.scope_name = scope_name
         self.scope_level = scope_level
         self.enclosing_scope = enclosing_scope
-        self._init_builtins()
 
     def _init_builtins(self):
         self.insert(BuiltinTypeSymbol('INTEGER'))
@@ -87,5 +86,13 @@ class ScopedSymbolTable(object):
         self._symbols[symbol.name] = symbol
 
     def lookup(self, name):
-        print 'Lookup: %s' % name
-        return self._symbols.get(name)
+        print 'Lookup: %s. (Scope name: %s)' % (name, self.scope_name)
+        symbol = self._symbols.get(name)
+
+        if symbol is not None:
+            return symbol
+
+        if self.enclosing_scope is not None:
+            return self.enclosing_scope.lookup(name)
+
+        return None
