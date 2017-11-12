@@ -16,9 +16,6 @@ if __name__ == '__main__':
     tree = parser.parse()
     semantic_analyzer = SemanticAnalyzer()
     semantic_analyzer.visit(tree)
-    print
-    print 'Symbol Table contents:'
-    print semantic_analyzer.scope
 
     interpreter = Interpreter(tree)
     result = interpreter.interpret()
