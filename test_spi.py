@@ -122,9 +122,9 @@ def test_symbol_table_builder():
     parser = Parser(lexer)
     tree = parser.parse()
     semantic_analyzer = SemanticAnalyzer()
-    scope_tree = semantic_analyzer.visit(tree)
+    global_scope = semantic_analyzer.visit(tree)
 
-    assert scope_tree._symbols == {
+    assert global_scope._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
         'X': VarSymbol('X', integer_type),
@@ -198,11 +198,11 @@ def test_part11():
     parser = Parser(lexer)
     tree = parser.parse()
     semantic_analyzer = SemanticAnalyzer()
-    scope_tree = semantic_analyzer.visit(tree)
+    global_scope = semantic_analyzer.visit(tree)
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert scope_tree._symbols == {
+    assert global_scope._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
         'NUMBER': VarSymbol('NUMBER', integer_type),
@@ -248,24 +248,24 @@ def test_part12():
     parser = Parser(lexer)
     tree = parser.parse()
     semantic_analyzer = SemanticAnalyzer()
-    scope_tree = semantic_analyzer.visit(tree)
+    global_scope = semantic_analyzer.visit(tree)
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert scope_tree._symbols == {
+    assert global_scope._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
         'A': VarSymbol('A', integer_type),
         'P1': ProcedureSymbol('P1')
     }
 
-    assert scope_tree.P1_scope._symbols == {
+    assert global_scope.P1_scope._symbols == {
         'A': VarSymbol('A', real_type),
         'K': VarSymbol('K', integer_type),
         'P2': ProcedureSymbol('P2')
     }
 
-    assert scope_tree.P1_scope.P2_scope._symbols == {
+    assert global_scope.P1_scope.P2_scope._symbols == {
         'A': VarSymbol('A', integer_type),
         'Z': VarSymbol('Z', integer_type)
     }
@@ -294,8 +294,9 @@ def test_duplicate_decl_error():
     assert e.typename == 'DuplicateDeclaration'
     assert e.value.message == "'Y'"
 
+
 def test_formal_parameter():
-    text="""
+    text = """
         program Main;
        var x, y: real;
     
@@ -314,11 +315,11 @@ def test_formal_parameter():
     parser = Parser(lexer)
     tree = parser.parse()
     semantic_analyzer = SemanticAnalyzer()
-    scope_tree = semantic_analyzer.visit(tree)
+    global_scope = semantic_analyzer.visit(tree)
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert scope_tree._symbols == {
+    assert global_scope._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
         'X': VarSymbol('X', real_type),
@@ -326,10 +327,85 @@ def test_formal_parameter():
         'ALPHA': ProcedureSymbol('ALPHA')
     }
 
-    assert scope_tree.ALPHA_scope._symbols == {
+    assert global_scope.ALPHA_scope._symbols == {
         'A': VarSymbol('A', integer_type),
         'Y': VarSymbol('Y', integer_type)
     }
 
     assert interpreter.GLOBAL_SCOPE == {}
 
+
+def test_part_14():
+    text = """
+    program Main;
+       var b, x, y : real;
+       var z : integer;
+    
+       procedure AlphaA(a : integer);
+          var b : integer;
+    
+          procedure Beta(c : integer);
+             var y : integer;
+    
+             procedure Gamma(c : integer);
+                var x : integer;
+             begin { Gamma }
+                x := a + b + c + x + y + z;
+             end;  { Gamma }
+    
+          begin { Beta }
+    
+          end;  { Beta }
+    
+       begin { AlphaA }
+    
+       end;  { AlphaA }
+    
+       procedure AlphaB(a : integer);
+          var c : real;
+       begin { AlphaB }
+          c := a + b;
+       end;  { AlphaB }
+    
+    begin { Main }
+    end.  { Main }
+    """
+
+    lexer = Lexer(text)
+    parser = Parser(lexer)
+    tree = parser.parse()
+    semantic_analyzer = SemanticAnalyzer()
+    global_scope = semantic_analyzer.visit(tree)
+
+    assert global_scope._symbols == {
+        'B': VarSymbol('B', real_type),
+        'X': VarSymbol('X', real_type),
+        'Y': VarSymbol('Y', real_type),
+        'Z': VarSymbol('Z', integer_type),
+        'ALPHAA': ProcedureSymbol('ALPHAA'),
+        'ALPHAB': ProcedureSymbol('ALPHAB'),
+        'INTEGER': integer_type,
+        'REAL': real_type
+    }
+
+    assert global_scope.ALPHAA_scope._symbols == {
+        'A': VarSymbol('A', integer_type),
+        'B': VarSymbol('B', integer_type),
+        'BETA': ProcedureSymbol('BETA')
+    }
+
+    assert global_scope.ALPHAA_scope.BETA_scope._symbols == {
+        'C': VarSymbol('C', integer_type),
+        'Y': VarSymbol('Y', integer_type),
+        'GAMMA': ProcedureSymbol('GAMMA')
+    }
+
+    assert global_scope.ALPHAA_scope.BETA_scope.GAMMA_scope._symbols == {
+        'C': VarSymbol('C', integer_type),
+        'X': VarSymbol('X', integer_type)
+    }
+
+    assert global_scope.ALPHAB_scope._symbols == {
+        'A': VarSymbol('A', integer_type),
+        'C': VarSymbol('C', real_type)
+    }
