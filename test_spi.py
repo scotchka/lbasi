@@ -122,11 +122,15 @@ def test_symbol_table_builder():
     parser = Parser(lexer)
     tree = parser.parse()
     semantic_analyzer = SemanticAnalyzer()
-    global_scope = semantic_analyzer.visit(tree)
+    builtins_scope = semantic_analyzer.visit(tree)
 
-    assert global_scope._symbols == {
+    assert builtins_scope._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
+        'PART11': ProcedureSymbol('PART11')
+    }
+
+    assert builtins_scope.global_scope._symbols == {
         'X': VarSymbol('X', integer_type),
         'Y': VarSymbol('Y', real_type)
     }
@@ -198,13 +202,18 @@ def test_part11():
     parser = Parser(lexer)
     tree = parser.parse()
     semantic_analyzer = SemanticAnalyzer()
-    global_scope = semantic_analyzer.visit(tree)
+    builtins_scope = semantic_analyzer.visit(tree)
+    global_scope = builtins_scope.global_scope
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert global_scope._symbols == {
+    assert builtins_scope._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
+        'PART11': ProcedureSymbol('PART11')
+    }
+
+    assert global_scope._symbols == {
         'NUMBER': VarSymbol('NUMBER', integer_type),
         'A': VarSymbol('A', integer_type),
         'B': VarSymbol('B', integer_type),
@@ -248,13 +257,18 @@ def test_part12():
     parser = Parser(lexer)
     tree = parser.parse()
     semantic_analyzer = SemanticAnalyzer()
-    global_scope = semantic_analyzer.visit(tree)
+    builtins_scope = semantic_analyzer.visit(tree)
+    global_scope = builtins_scope.global_scope
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert global_scope._symbols == {
+    assert builtins_scope._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
+        'PART12': ProcedureSymbol('PART12')
+    }
+
+    assert global_scope._symbols == {
         'A': VarSymbol('A', integer_type),
         'P1': ProcedureSymbol('P1')
     }
@@ -315,13 +329,18 @@ def test_formal_parameter():
     parser = Parser(lexer)
     tree = parser.parse()
     semantic_analyzer = SemanticAnalyzer()
-    global_scope = semantic_analyzer.visit(tree)
+    builtins_scope = semantic_analyzer.visit(tree)
+    global_scope = builtins_scope.global_scope
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert global_scope._symbols == {
+    assert builtins_scope._symbols == {
         'INTEGER': integer_type,
         'REAL': real_type,
+        'MAIN': ProcedureSymbol('MAIN')
+    }
+
+    assert global_scope._symbols == {
         'X': VarSymbol('X', real_type),
         'Y': VarSymbol('Y', real_type),
         'ALPHA': ProcedureSymbol('ALPHA')
@@ -375,7 +394,14 @@ def test_part_14():
     parser = Parser(lexer)
     tree = parser.parse()
     semantic_analyzer = SemanticAnalyzer()
-    global_scope = semantic_analyzer.visit(tree)
+    builtins_scope = semantic_analyzer.visit(tree)
+    global_scope = builtins_scope.global_scope
+
+    assert builtins_scope._symbols == {
+        'INTEGER': integer_type,
+        'REAL': real_type,
+        'MAIN': ProcedureSymbol('MAIN')
+    }
 
     assert global_scope._symbols == {
         'B': VarSymbol('B', real_type),
@@ -383,9 +409,7 @@ def test_part_14():
         'Y': VarSymbol('Y', real_type),
         'Z': VarSymbol('Z', integer_type),
         'ALPHAA': ProcedureSymbol('ALPHAA'),
-        'ALPHAB': ProcedureSymbol('ALPHAB'),
-        'INTEGER': integer_type,
-        'REAL': real_type
+        'ALPHAB': ProcedureSymbol('ALPHAB')
     }
 
     assert global_scope.ALPHAA_scope._symbols == {
