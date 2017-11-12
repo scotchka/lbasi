@@ -4,7 +4,9 @@ from symbol import ScopedSymbolTable, VarSymbol, ProcedureSymbol
 
 class SemanticAnalyzer(NodeVisitor):
     def __init__(self):
-        self.current_scope = None
+        builtins_scope = ScopedSymbolTable(scope_name='builtins', scope_level=0)
+        builtins_scope._init_builtins()
+        self.current_scope = builtins_scope
 
     def visit_Block(self, node):
         for declaration in node.declarations:
@@ -12,9 +14,13 @@ class SemanticAnalyzer(NodeVisitor):
         self.visit(node.compound_statement)
 
     def visit_Program(self, node):
+        builtins_scope = self.current_scope
+        builtins_scope.insert(ProcedureSymbol(node.name))
+        print builtins_scope
+
         print 'ENTER scope: global'
         global_scope = ScopedSymbolTable(scope_name='global', scope_level=1, enclosing_scope=self.current_scope)
-        global_scope._init_builtins()
+        self.current_scope.global_scope = global_scope
         self.current_scope = global_scope
         self.visit(node.block)
 
@@ -23,7 +29,7 @@ class SemanticAnalyzer(NodeVisitor):
         self.current_scope = self.current_scope.enclosing_scope
 
         print 'LEAVE scope: global'
-        return global_scope
+        return builtins_scope
 
     def visit_BinOp(self, node):
         self.visit(node.left)
