@@ -1,4 +1,4 @@
-from errors import InterpreterError
+from .errors import InterpreterError
 
 
 class NodeVisitor(object):

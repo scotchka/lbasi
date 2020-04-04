@@ -1,8 +1,8 @@
-from errors import LexerError
-from constants import (SYMBOLS, EOF, RESERVED_KEYWORDS, ID, ASSIGN, SEMI, DOT, INTEGER_DIV,
+from .errors import LexerError
+from .constants import (SYMBOLS, EOF, RESERVED_KEYWORDS, ID, ASSIGN, SEMI, DOT, INTEGER_DIV,
                        INTEGER_CONST, REAL_CONST, COLON, COMMA, FLOAT_DIV)
 
-from token import Token
+from .token import Token
 
 
 class Lexer(object):

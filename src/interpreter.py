@@ -1,7 +1,7 @@
-from errors import InterpreterError
-from constants import OPS, PLUS, MINUS, MULTIPLY, INTEGER_DIV, FLOAT_DIV
+from .errors import InterpreterError
+from .constants import OPS, PLUS, MINUS, MULTIPLY, INTEGER_DIV, FLOAT_DIV
 
-from node_visitor import NodeVisitor
+from .node_visitor import NodeVisitor
 
 
 class Interpreter(NodeVisitor):

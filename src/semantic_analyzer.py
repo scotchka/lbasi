@@ -1,5 +1,5 @@
-from node_visitor import NodeVisitor
-from symbol import ScopedSymbolTable, VarSymbol, ProcedureSymbol
+from .node_visitor import NodeVisitor
+from .symbol import ScopedSymbolTable, VarSymbol, ProcedureSymbol
 
 
 class SemanticAnalyzer(NodeVisitor):
@@ -16,19 +16,19 @@ class SemanticAnalyzer(NodeVisitor):
     def visit_Program(self, node):
         builtins_scope = self.current_scope
         builtins_scope.insert(ProcedureSymbol(node.name))
-        print builtins_scope
+        print(builtins_scope)
 
-        print 'ENTER scope: global'
+        print('ENTER scope: global')
         global_scope = ScopedSymbolTable(scope_name='global', scope_level=1, enclosing_scope=self.current_scope)
         self.current_scope.global_scope = global_scope
         self.current_scope = global_scope
         self.visit(node.block)
 
-        print global_scope
+        print(global_scope)
 
         self.current_scope = self.current_scope.enclosing_scope
 
-        print 'LEAVE scope: global'
+        print('LEAVE scope: global')
         return builtins_scope
 
     def visit_BinOp(self, node):
@@ -70,7 +70,7 @@ class SemanticAnalyzer(NodeVisitor):
         proc_symbol = ProcedureSymbol(proc_name)
         self.current_scope.insert(proc_symbol)
 
-        print 'ENTER scope: %s' % proc_name
+        print('ENTER scope: %s' % proc_name)
         procedure_scope = ScopedSymbolTable(
             scope_name=proc_name,
             scope_level=self.current_scope.scope_level + 1,
@@ -88,8 +88,8 @@ class SemanticAnalyzer(NodeVisitor):
 
         self.visit(node.block_node)
 
-        print procedure_scope
+        print(procedure_scope)
 
         self.current_scope = self.current_scope.enclosing_scope
 
-        print 'LEAVE scope: %s' % proc_name
+        print('LEAVE scope: %s' % proc_name)

@@ -1,5 +1,5 @@
 import operator
-from token import Token
+from .token import Token
 
 # token types
 

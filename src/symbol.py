@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from errors import UndeclaredVariable, DuplicateDeclaration
+from .errors import UndeclaredVariable, DuplicateDeclaration
 
 
 class Symbol(object):
@@ -86,13 +86,13 @@ class ScopedSymbolTable(object):
         return s
 
     def insert(self, symbol):
-        print 'Insert: %s' % symbol.name
+        print('Insert: %s' % symbol.name)
         if symbol.name in self._symbols:
             raise DuplicateDeclaration(repr(symbol.name))
         self._symbols[symbol.name] = symbol
 
     def lookup(self, name):
-        print 'Lookup: %s. (Scope name: %s)' % (name, self.scope_name)
+        print('Lookup: %s. (Scope name: %s)' % (name, self.scope_name))
         symbol = self._symbols.get(name)
 
         if symbol is not None:

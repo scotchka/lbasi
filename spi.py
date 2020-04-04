@@ -20,7 +20,7 @@ if __name__ == '__main__':
     interpreter = Interpreter(tree)
     result = interpreter.interpret()
 
-    print
-    print 'Runtime GLOBAL_MEMORY contents:'
+    print()
+    print('Runtime GLOBAL_MEMORY contents:')
     for k, v in sorted(interpreter.GLOBAL_SCOPE.items()):
-        print '%s = %s' % (k, v)
+        print('%s = %s' % (k, v))

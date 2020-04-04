@@ -1,9 +1,9 @@
-from errors import ParserError
-from constants import (INTEGER_CONST, PLUS, MINUS, MULTIPLY, INTEGER_DIV, LPARENS, RPARENS, DOT,
+from .errors import ParserError
+from .constants import (INTEGER_CONST, PLUS, MINUS, MULTIPLY, INTEGER_DIV, LPARENS, RPARENS, DOT,
                        BEGIN, END, SEMI, ID, ASSIGN, EOF, REAL_CONST, VAR, COMMA, COLON, REAL, INTEGER,
                        PROGRAM, FLOAT_DIV, PROCEDURE)
 
-from ast import Num, UnaryOp, BinOp, Block, Assign, Program, Compound, Type, VarDecl, Var, NoOp, ProcedureDecl, Param
+from .ast import Num, UnaryOp, BinOp, Block, Assign, Program, Compound, Type, VarDecl, Var, NoOp, ProcedureDecl, Param
 
 
 class Parser(object):

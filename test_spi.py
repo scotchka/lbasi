@@ -156,7 +156,7 @@ def test_symtab_exception1():
         semantic_analyzer.visit(tree)
 
     assert e.typename == 'UndeclaredVariable'
-    assert e.value.message == "'B'"
+    assert e.value.args == ("'B'",)
 
 
 def test_symtab_exception2():
@@ -180,7 +180,7 @@ def test_symtab_exception2():
         semantic_analyzer.visit(tree)
 
     assert e.typename == 'UndeclaredVariable'
-    assert e.value.message == "'A'"
+    assert e.value.args == ("'A'",)
 
 
 def test_part11():
@@ -306,7 +306,7 @@ def test_duplicate_decl_error():
         semantic_analyzer.visit(tree)
 
     assert e.typename == 'DuplicateDeclaration'
-    assert e.value.message == "'Y'"
+    assert e.value.args == ("'Y'",)
 
 
 def test_formal_parameter():
