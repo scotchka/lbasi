@@ -1,6 +1,19 @@
 from .errors import LexerError
-from .constants import (SYMBOLS, EOF, RESERVED_KEYWORDS, ID, ASSIGN, SEMI, DOT, INTEGER_DIV,
-                       INTEGER_CONST, REAL_CONST, COLON, COMMA, FLOAT_DIV)
+from .constants import (
+    SYMBOLS,
+    EOF,
+    RESERVED_KEYWORDS,
+    ID,
+    ASSIGN,
+    SEMI,
+    DOT,
+    INTEGER_DIV,
+    INTEGER_CONST,
+    REAL_CONST,
+    COLON,
+    COMMA,
+    FLOAT_DIV,
+)
 
 from .token import Token
 
@@ -14,7 +27,7 @@ class Lexer(object):
 
     @staticmethod
     def error():
-        raise LexerError('Invalid character')
+        raise LexerError("Invalid character")
 
     def advance(self):
         self.pos += 1
@@ -28,7 +41,7 @@ class Lexer(object):
             self.advance()
 
     def skip_comment(self):
-        while self.current_char != '}':
+        while self.current_char != "}":
             self.advance()
         self.advance()
 
@@ -38,7 +51,7 @@ class Lexer(object):
             digits.append(self.current_char)
             self.advance()
 
-        if self.current_char == '.':
+        if self.current_char == ".":
             digits.append(self.current_char)
             self.advance()
 
@@ -46,13 +59,15 @@ class Lexer(object):
                 digits.append(self.current_char)
                 self.advance()
 
-            return Token(REAL_CONST, float(''.join(digits)))
+            return Token(REAL_CONST, float("".join(digits)))
 
-        return Token(INTEGER_CONST, int(''.join(digits)))
+        return Token(INTEGER_CONST, int("".join(digits)))
 
     def _id(self):
-        result = ''
-        while self.current_char is not None and (self.current_char.isalnum() or self.current_char == '_'):
+        result = ""
+        while self.current_char is not None and (
+            self.current_char.isalnum() or self.current_char == "_"
+        ):
             result += self.current_char
             self.advance()
 
@@ -72,7 +87,7 @@ class Lexer(object):
                 self.skip_whitespace()
                 continue
 
-            if self.current_char == '{':
+            if self.current_char == "{":
                 self.advance()
                 self.skip_comment()
                 continue
@@ -85,33 +100,33 @@ class Lexer(object):
                 self.advance()
                 return Token(SYMBOLS[current_char], current_char)
 
-            if self.current_char.isalpha() or self.current_char == '_':
+            if self.current_char.isalpha() or self.current_char == "_":
                 return self._id()
 
-            if self.current_char == ':' and self.peek() == '=':
+            if self.current_char == ":" and self.peek() == "=":
                 self.advance()
                 self.advance()
-                return Token(ASSIGN, ':=')
+                return Token(ASSIGN, ":=")
 
-            if self.current_char == ';':
+            if self.current_char == ";":
                 self.advance()
-                return Token(SEMI, ';')
+                return Token(SEMI, ";")
 
-            if self.current_char == '.':
+            if self.current_char == ".":
                 self.advance()
-                return Token(DOT, '.')
+                return Token(DOT, ".")
 
-            if self.current_char == ':':
+            if self.current_char == ":":
                 self.advance()
-                return Token(COLON, ':')
+                return Token(COLON, ":")
 
-            if self.current_char == ',':
+            if self.current_char == ",":
                 self.advance()
-                return Token(COMMA, ',')
+                return Token(COMMA, ",")
 
-            if self.current_char == '/':
+            if self.current_char == "/":
                 self.advance()
-                return Token(FLOAT_DIV, '/')
+                return Token(FLOAT_DIV, "/")
 
             self.error()
 

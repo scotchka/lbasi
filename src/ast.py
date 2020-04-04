@@ -33,9 +33,9 @@ class BinOp(AST):
         self.right = right
 
     def __repr__(self):
-        return 'BinOp({left}, {token}, {right})'.format(left=repr(self.left),
-                                                        token=repr(self.token.value),
-                                                        right=repr(self.right))
+        return "BinOp({left}, {token}, {right})".format(
+            left=repr(self.left), token=repr(self.token.value), right=repr(self.right)
+        )
 
 
 class UnaryOp(AST):
@@ -50,7 +50,7 @@ class Num(AST):
         self.value = token.value
 
     def __repr__(self):
-        return 'Num({})'.format(self.value)
+        return "Num({})".format(self.value)
 
 
 class Compound(AST):
@@ -86,5 +86,3 @@ class Param(AST):
     def __init__(self, var_node, type_node):
         self.var_node = var_node
         self.type_node = type_node
-
-

@@ -3,9 +3,9 @@ from src.parser import Parser
 from src.interpreter import Interpreter
 from src.semantic_analyzer import SemanticAnalyzer
 
-__all__ = ('Lexer', 'Parser', 'Interpreter', 'SemanticAnalyzer')
+__all__ = ("Lexer", "Parser", "Interpreter", "SemanticAnalyzer")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
 
     with open(sys.argv[1]) as f:
@@ -21,6 +21,6 @@ if __name__ == '__main__':
     result = interpreter.interpret()
 
     print()
-    print('Runtime GLOBAL_MEMORY contents:')
+    print("Runtime GLOBAL_MEMORY contents:")
     for k, v in sorted(interpreter.GLOBAL_SCOPE.items()):
-        print('%s = %s' % (k, v))
+        print("%s = %s" % (k, v))

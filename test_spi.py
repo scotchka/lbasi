@@ -3,8 +3,8 @@ from spi import Lexer, Parser, Interpreter, SemanticAnalyzer
 from src.symbol import BuiltinTypeSymbol, VarSymbol, ProcedureSymbol
 from src.errors import UndeclaredVariable, DuplicateDeclaration
 
-integer_type = BuiltinTypeSymbol('INTEGER')
-real_type = BuiltinTypeSymbol('REAL')
+integer_type = BuiltinTypeSymbol("INTEGER")
+real_type = BuiltinTypeSymbol("REAL")
 
 
 def test_interpreter():
@@ -33,7 +33,13 @@ def test_interpreter():
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert interpreter.GLOBAL_SCOPE == {'A': 2, 'X': 11.2, 'C': 27, 'B': 25, 'NUMBER': 2}
+    assert interpreter.GLOBAL_SCOPE == {
+        "A": 2,
+        "X": 11.2,
+        "C": 27,
+        "B": 25,
+        "NUMBER": 2,
+    }
 
 
 def test_case_insensitive():
@@ -64,7 +70,13 @@ def test_case_insensitive():
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert interpreter.GLOBAL_SCOPE == {'A': 2, 'X': 11, 'C': 27, 'B': 25, '_NUM_BER': 2}
+    assert interpreter.GLOBAL_SCOPE == {
+        "A": 2,
+        "X": 11,
+        "C": 27,
+        "B": 25,
+        "_NUM_BER": 2,
+    }
 
 
 def test_part10():
@@ -103,7 +115,14 @@ def test_part10():
     interpreter = Interpreter(tree)
     interpreter.interpret()
 
-    assert interpreter.GLOBAL_SCOPE == {'A': 2, 'C': 27, 'B': 25, 'NUMBER': 2, 'Y': 5.997142857142857, 'X': 5.5}
+    assert interpreter.GLOBAL_SCOPE == {
+        "A": 2,
+        "C": 27,
+        "B": 25,
+        "NUMBER": 2,
+        "Y": 5.997142857142857,
+        "X": 5.5,
+    }
 
 
 def test_symbol_table_builder():
@@ -125,14 +144,14 @@ def test_symbol_table_builder():
     builtins_scope = semantic_analyzer.visit(tree)
 
     assert builtins_scope._symbols == {
-        'INTEGER': integer_type,
-        'REAL': real_type,
-        'PART11': ProcedureSymbol('PART11')
+        "INTEGER": integer_type,
+        "REAL": real_type,
+        "PART11": ProcedureSymbol("PART11"),
     }
 
     assert builtins_scope.global_scope._symbols == {
-        'X': VarSymbol('X', integer_type),
-        'Y': VarSymbol('Y', real_type)
+        "X": VarSymbol("X", integer_type),
+        "Y": VarSymbol("Y", real_type),
     }
 
 
@@ -155,7 +174,7 @@ def test_symtab_exception1():
     with pytest.raises(UndeclaredVariable) as e:
         semantic_analyzer.visit(tree)
 
-    assert e.typename == 'UndeclaredVariable'
+    assert e.typename == "UndeclaredVariable"
     assert e.value.args == ("'B'",)
 
 
@@ -179,7 +198,7 @@ def test_symtab_exception2():
     with pytest.raises(UndeclaredVariable) as e:
         semantic_analyzer.visit(tree)
 
-    assert e.typename == 'UndeclaredVariable'
+    assert e.typename == "UndeclaredVariable"
     assert e.value.args == ("'A'",)
 
 
@@ -208,22 +227,19 @@ def test_part11():
     interpreter.interpret()
 
     assert builtins_scope._symbols == {
-        'INTEGER': integer_type,
-        'REAL': real_type,
-        'PART11': ProcedureSymbol('PART11')
+        "INTEGER": integer_type,
+        "REAL": real_type,
+        "PART11": ProcedureSymbol("PART11"),
     }
 
     assert global_scope._symbols == {
-        'NUMBER': VarSymbol('NUMBER', integer_type),
-        'A': VarSymbol('A', integer_type),
-        'B': VarSymbol('B', integer_type),
-        'Y': VarSymbol('Y', real_type)
+        "NUMBER": VarSymbol("NUMBER", integer_type),
+        "A": VarSymbol("A", integer_type),
+        "B": VarSymbol("B", integer_type),
+        "Y": VarSymbol("Y", real_type),
     }
 
-    assert interpreter.GLOBAL_SCOPE == dict(A=2,
-                                            B=25,
-                                            NUMBER=2,
-                                            Y=5.997142857142857)
+    assert interpreter.GLOBAL_SCOPE == dict(A=2, B=25, NUMBER=2, Y=5.997142857142857)
 
 
 def test_part12():
@@ -263,28 +279,28 @@ def test_part12():
     interpreter.interpret()
 
     assert builtins_scope._symbols == {
-        'INTEGER': integer_type,
-        'REAL': real_type,
-        'PART12': ProcedureSymbol('PART12')
+        "INTEGER": integer_type,
+        "REAL": real_type,
+        "PART12": ProcedureSymbol("PART12"),
     }
 
     assert global_scope._symbols == {
-        'A': VarSymbol('A', integer_type),
-        'P1': ProcedureSymbol('P1')
+        "A": VarSymbol("A", integer_type),
+        "P1": ProcedureSymbol("P1"),
     }
 
     assert global_scope.P1_scope._symbols == {
-        'A': VarSymbol('A', real_type),
-        'K': VarSymbol('K', integer_type),
-        'P2': ProcedureSymbol('P2')
+        "A": VarSymbol("A", real_type),
+        "K": VarSymbol("K", integer_type),
+        "P2": ProcedureSymbol("P2"),
     }
 
     assert global_scope.P1_scope.P2_scope._symbols == {
-        'A': VarSymbol('A', integer_type),
-        'Z': VarSymbol('Z', integer_type)
+        "A": VarSymbol("A", integer_type),
+        "Z": VarSymbol("Z", integer_type),
     }
 
-    assert interpreter.GLOBAL_SCOPE == {'A': 10}
+    assert interpreter.GLOBAL_SCOPE == {"A": 10}
 
 
 def test_duplicate_decl_error():
@@ -305,7 +321,7 @@ def test_duplicate_decl_error():
     with pytest.raises(DuplicateDeclaration) as e:
         semantic_analyzer.visit(tree)
 
-    assert e.typename == 'DuplicateDeclaration'
+    assert e.typename == "DuplicateDeclaration"
     assert e.value.args == ("'Y'",)
 
 
@@ -335,20 +351,20 @@ def test_formal_parameter():
     interpreter.interpret()
 
     assert builtins_scope._symbols == {
-        'INTEGER': integer_type,
-        'REAL': real_type,
-        'MAIN': ProcedureSymbol('MAIN')
+        "INTEGER": integer_type,
+        "REAL": real_type,
+        "MAIN": ProcedureSymbol("MAIN"),
     }
 
     assert global_scope._symbols == {
-        'X': VarSymbol('X', real_type),
-        'Y': VarSymbol('Y', real_type),
-        'ALPHA': ProcedureSymbol('ALPHA')
+        "X": VarSymbol("X", real_type),
+        "Y": VarSymbol("Y", real_type),
+        "ALPHA": ProcedureSymbol("ALPHA"),
     }
 
     assert global_scope.ALPHA_scope._symbols == {
-        'A': VarSymbol('A', integer_type),
-        'Y': VarSymbol('Y', integer_type)
+        "A": VarSymbol("A", integer_type),
+        "Y": VarSymbol("Y", integer_type),
     }
 
     assert interpreter.GLOBAL_SCOPE == {}
@@ -398,38 +414,38 @@ def test_part_14():
     global_scope = builtins_scope.global_scope
 
     assert builtins_scope._symbols == {
-        'INTEGER': integer_type,
-        'REAL': real_type,
-        'MAIN': ProcedureSymbol('MAIN')
+        "INTEGER": integer_type,
+        "REAL": real_type,
+        "MAIN": ProcedureSymbol("MAIN"),
     }
 
     assert global_scope._symbols == {
-        'B': VarSymbol('B', real_type),
-        'X': VarSymbol('X', real_type),
-        'Y': VarSymbol('Y', real_type),
-        'Z': VarSymbol('Z', integer_type),
-        'ALPHAA': ProcedureSymbol('ALPHAA'),
-        'ALPHAB': ProcedureSymbol('ALPHAB')
+        "B": VarSymbol("B", real_type),
+        "X": VarSymbol("X", real_type),
+        "Y": VarSymbol("Y", real_type),
+        "Z": VarSymbol("Z", integer_type),
+        "ALPHAA": ProcedureSymbol("ALPHAA"),
+        "ALPHAB": ProcedureSymbol("ALPHAB"),
     }
 
     assert global_scope.ALPHAA_scope._symbols == {
-        'A': VarSymbol('A', integer_type),
-        'B': VarSymbol('B', integer_type),
-        'BETA': ProcedureSymbol('BETA')
+        "A": VarSymbol("A", integer_type),
+        "B": VarSymbol("B", integer_type),
+        "BETA": ProcedureSymbol("BETA"),
     }
 
     assert global_scope.ALPHAA_scope.BETA_scope._symbols == {
-        'C': VarSymbol('C', integer_type),
-        'Y': VarSymbol('Y', integer_type),
-        'GAMMA': ProcedureSymbol('GAMMA')
+        "C": VarSymbol("C", integer_type),
+        "Y": VarSymbol("Y", integer_type),
+        "GAMMA": ProcedureSymbol("GAMMA"),
     }
 
     assert global_scope.ALPHAA_scope.BETA_scope.GAMMA_scope._symbols == {
-        'C': VarSymbol('C', integer_type),
-        'X': VarSymbol('X', integer_type)
+        "C": VarSymbol("C", integer_type),
+        "X": VarSymbol("X", integer_type),
     }
 
     assert global_scope.ALPHAB_scope._symbols == {
-        'A': VarSymbol('A', integer_type),
-        'C': VarSymbol('C', real_type)
+        "A": VarSymbol("A", integer_type),
+        "C": VarSymbol("C", real_type),
     }

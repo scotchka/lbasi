@@ -1,6 +1,6 @@
 class Parse(object):
     def __init__(self):
-        self.string = ''
+        self.string = ""
         self.pos = 0
 
     def consume(self, char):
@@ -16,7 +16,7 @@ class Parse(object):
 
     def NUM(self):
 
-        result = ''
+        result = ""
         while self.pos < len(self.string) and self.string[self.pos].isdigit():
             result += self.string[self.pos]
             self.pos += 1
@@ -37,17 +37,18 @@ class Parse(object):
 
     def ELEMS(self):
         start = self.pos
-        result = (self.ELEM() is not False
-                  and self.whitespace()
-                  and self.consume(',')
-                  and self.whitespace()
-                  and self.ELEMS() is not False  # recurse
-                  )
+        result = (
+            self.ELEM() is not False
+            and self.whitespace()
+            and self.consume(",")
+            and self.whitespace()
+            and self.ELEMS() is not False  # recurse
+        )
         if result is True:
             self.pos = start
             elem = self.ELEM()
             self.whitespace()
-            self.consume(',')
+            self.consume(",")
             self.whitespace()
             elems = self.ELEMS()
             return [elem] + elems
@@ -66,40 +67,42 @@ class Parse(object):
     def LIST(self):
         #         print 'string', self.string[self.pos:]
         start = self.pos
-        result = (self.whitespace()
-                  and self.consume('[')
-                  and self.whitespace()
-                  and self.ELEMS()
-                  and self.whitespace()
-                  and self.consume(']')
-                  and self.whitespace()
-                  )
+        result = (
+            self.whitespace()
+            and self.consume("[")
+            and self.whitespace()
+            and self.ELEMS()
+            and self.whitespace()
+            and self.consume("]")
+            and self.whitespace()
+        )
         if result is True:
             self.pos = start
             self.whitespace()
-            self.consume('[')
+            self.consume("[")
             self.whitespace()
             elems = self.ELEMS()
             self.whitespace()
-            self.consume(']')
+            self.consume("]")
             self.whitespace()
             #             print 'elems', elems
             return elems
 
         self.pos = start
-        result = (self.whitespace()
-                  and self.consume('[')
-                  and self.whitespace()
-                  and self.consume(']')
-                  and self.whitespace()
-                  )
+        result = (
+            self.whitespace()
+            and self.consume("[")
+            and self.whitespace()
+            and self.consume("]")
+            and self.whitespace()
+        )
 
         if result is True:
             self.pos = start
             self.whitespace()
-            self.consume('[')
+            self.consume("[")
             self.whitespace()
-            self.consume(']')
+            self.consume("]")
             self.whitespace()
             #             print '[]', []
             return []

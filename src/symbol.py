@@ -14,8 +14,7 @@ class BuiltinTypeSymbol(Symbol):
 
     def __repr__(self):
         return "<{class_name}(name='{name}')>".format(
-            class_name=self.__class__.__name__,
-            name=self.name
+            class_name=self.__class__.__name__, name=self.name
         )
 
     def __eq__(self, other):
@@ -25,9 +24,7 @@ class BuiltinTypeSymbol(Symbol):
 class VarSymbol(Symbol):
     def __repr__(self):
         return "<{class_name}(name='{name}', type='{type}')>".format(
-            class_name=self.__class__.__name__,
-            name=self.name,
-            type=self.type
+            class_name=self.__class__.__name__, name=self.name, type=self.type
         )
 
     def __eq__(self, other):
@@ -43,10 +40,8 @@ class ProcedureSymbol(Symbol):
         self.params = params
 
     def __repr__(self):
-        return '<{class_name}(name={name}, parameters={params})>'.format(
-            class_name=self.__class__.__name__,
-            name=self.name,
-            params=self.params,
+        return "<{class_name}(name={name}, parameters={params})>".format(
+            class_name=self.__class__.__name__, name=self.name, params=self.params,
         )
 
     def __eq__(self, other):
@@ -61,38 +56,36 @@ class ScopedSymbolTable(object):
         self.enclosing_scope = enclosing_scope
 
     def _init_builtins(self):
-        self.insert(BuiltinTypeSymbol('INTEGER'))
-        self.insert(BuiltinTypeSymbol('REAL'))
+        self.insert(BuiltinTypeSymbol("INTEGER"))
+        self.insert(BuiltinTypeSymbol("REAL"))
 
     def __repr__(self):
-        h1 = 'SCOPE (SCOPED SYMBOL TABLE)'
-        lines = ['\n', h1, '=' * len(h1)]
+        h1 = "SCOPE (SCOPED SYMBOL TABLE)"
+        lines = ["\n", h1, "=" * len(h1)]
         for header_name, header_value in (
-                ('Scope name', self.scope_name),
-                ('Scope level', self.scope_level),
-                ('Enclosing scope',
-                 self.enclosing_scope.scope_name if self.enclosing_scope else None
-                 )
+            ("Scope name", self.scope_name),
+            ("Scope level", self.scope_level),
+            (
+                "Enclosing scope",
+                self.enclosing_scope.scope_name if self.enclosing_scope else None,
+            ),
         ):
-            lines.append('%-15s: %s' % (header_name, header_value))
-        h2 = 'Scope (Scoped symbol table) contents'
-        lines.extend([h2, '-' * len(h2)])
-        lines.extend(
-            ('%7s: %r' % (key, value))
-            for key, value in self._symbols.items()
-        )
-        lines.append('\n')
-        s = '\n'.join(lines)
+            lines.append("%-15s: %s" % (header_name, header_value))
+        h2 = "Scope (Scoped symbol table) contents"
+        lines.extend([h2, "-" * len(h2)])
+        lines.extend(("%7s: %r" % (key, value)) for key, value in self._symbols.items())
+        lines.append("\n")
+        s = "\n".join(lines)
         return s
 
     def insert(self, symbol):
-        print('Insert: %s' % symbol.name)
+        print("Insert: %s" % symbol.name)
         if symbol.name in self._symbols:
             raise DuplicateDeclaration(repr(symbol.name))
         self._symbols[symbol.name] = symbol
 
     def lookup(self, name):
-        print('Lookup: %s. (Scope name: %s)' % (name, self.scope_name))
+        print("Lookup: %s. (Scope name: %s)" % (name, self.scope_name))
         symbol = self._symbols.get(name)
 
         if symbol is not None:

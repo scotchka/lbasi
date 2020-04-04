@@ -4,7 +4,7 @@ from .symbol import ScopedSymbolTable, VarSymbol, ProcedureSymbol
 
 class SemanticAnalyzer(NodeVisitor):
     def __init__(self):
-        builtins_scope = ScopedSymbolTable(scope_name='builtins', scope_level=0)
+        builtins_scope = ScopedSymbolTable(scope_name="builtins", scope_level=0)
         builtins_scope._init_builtins()
         self.current_scope = builtins_scope
 
@@ -18,8 +18,10 @@ class SemanticAnalyzer(NodeVisitor):
         builtins_scope.insert(ProcedureSymbol(node.name))
         print(builtins_scope)
 
-        print('ENTER scope: global')
-        global_scope = ScopedSymbolTable(scope_name='global', scope_level=1, enclosing_scope=self.current_scope)
+        print("ENTER scope: global")
+        global_scope = ScopedSymbolTable(
+            scope_name="global", scope_level=1, enclosing_scope=self.current_scope
+        )
         self.current_scope.global_scope = global_scope
         self.current_scope = global_scope
         self.visit(node.block)
@@ -28,7 +30,7 @@ class SemanticAnalyzer(NodeVisitor):
 
         self.current_scope = self.current_scope.enclosing_scope
 
-        print('LEAVE scope: global')
+        print("LEAVE scope: global")
         return builtins_scope
 
     def visit_BinOp(self, node):
@@ -70,13 +72,13 @@ class SemanticAnalyzer(NodeVisitor):
         proc_symbol = ProcedureSymbol(proc_name)
         self.current_scope.insert(proc_symbol)
 
-        print('ENTER scope: %s' % proc_name)
+        print("ENTER scope: %s" % proc_name)
         procedure_scope = ScopedSymbolTable(
             scope_name=proc_name,
             scope_level=self.current_scope.scope_level + 1,
-            enclosing_scope=self.current_scope
+            enclosing_scope=self.current_scope,
         )
-        setattr(self.current_scope, proc_name+'_scope', procedure_scope)
+        setattr(self.current_scope, proc_name + "_scope", procedure_scope)
         self.current_scope = procedure_scope
 
         for param in node.params:
@@ -92,4 +94,4 @@ class SemanticAnalyzer(NodeVisitor):
 
         self.current_scope = self.current_scope.enclosing_scope
 
-        print('LEAVE scope: %s' % proc_name)
+        print("LEAVE scope: %s" % proc_name)

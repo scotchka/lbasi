@@ -13,7 +13,7 @@ class Interpreter(NodeVisitor):
         if node.op.type in (PLUS, MINUS, MULTIPLY, INTEGER_DIV, FLOAT_DIV):
             return OPS[node.op.type](self.visit(node.left), self.visit(node.right))
         else:
-            raise InterpreterError('unknown binary operation')
+            raise InterpreterError("unknown binary operation")
 
     def visit_Num(self, node):
         return node.value
@@ -24,7 +24,7 @@ class Interpreter(NodeVisitor):
         elif node.op.type == PLUS:
             return +self.visit(node.expr)
         else:
-            raise InterpreterError('unknown unary operation')
+            raise InterpreterError("unknown unary operation")
 
     def visit_Compound(self, node):
         for child in node.children:

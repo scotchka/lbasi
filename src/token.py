@@ -5,4 +5,4 @@ class Token(object):
         # print type_, value
 
     def __repr__(self):
-        return '< Token {type_}: {value} >'.format(type_=self.type, value=self.value)
+        return "< Token {type_}: {value} >".format(type_=self.type, value=self.value)
